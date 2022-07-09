@@ -136,7 +136,7 @@ const addItem = () => {
 }
 
 // Function declaration and definition to delete task from upListData
-const deleteItem = ( itemId ) => {
+const deleteItem= ( itemId ) => {
   
   // find the item id as key then remove the value using filter() method
   const newList = upListData.filter( (item) => {
@@ -145,7 +145,18 @@ const deleteItem = ( itemId ) => {
     }
   })
   setUpListData( newList )
+
+  const newListCompleted = compListData.filter( (item) => {
+    if( item.id !== itemId ) {
+      return item
+    }
+  })
+  setCompListData( newListCompleted )
+
+
+
 }
+
 
 // Function declaration and definition to mark task as done
 const updateStatus = (itemId) => {
@@ -161,15 +172,14 @@ const updateStatus = (itemId) => {
    })
 
    let newList2 = upListData.filter ((item) => {
-   if (item.id !== itemId) {
-    
+   if (item.id !== itemId) { 
      return item
    }
    
    })
-   setUpListData(newList2)
-   
-  //setUpListData(newList)
+    setUpListData(newList2)
+    
+    //setUpListData(newList)
 
     setMarkedItem(newUpdatedItem)
     let newCompletedList = compListData.concat( newUpdatedItem )
@@ -208,6 +218,8 @@ const renderItem = ({item}) => (
 
   // Second method of rendering
   <ListItem item={item} remove={ deleteItem } update= {updateStatus} /> 
+ // <ListItem item={item} remove={{ deleteItemUpcoming, deleteItemCompleted }} update= {updateStatus} /> 
+
   )
 
 
@@ -223,6 +235,7 @@ const renderItem = ({item}) => (
 
       <View style = {styles.header}>
         <TextInput  style = {styles.input} 
+          placeholder ='Enter task here...' 
           onChangeText={ (value) => setInput(value) }
           ref = {txtInput}
         />
@@ -276,8 +289,7 @@ const renderItem = ({item}) => (
         ListEmptyComponent= { ListEmpty } // For no items in the list
         ListFooterComponent={ <ListFooter text="This is the end of task list" />}
       />
-      
-     
+        
     </View>
      
   );
