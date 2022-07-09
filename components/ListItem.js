@@ -6,23 +6,27 @@ export function ListItem ( props ) {
     return (
     <View style={ styles.item }>
       
-      <Text style={ styles.itemText}>{ props.item.name }</Text>
+      <Text style={ styles.itemNameText}>{ props.item.name }</Text>
+      <Text style={ styles.itemDateText}>{ props.item.date }</Text>
       
-      {/* <View style={ styles.icon}>
-      < Icon name="arrowsalt" size={20} color="blue" onPress={ () => props.remove(props.item.id) }/>
-      </View> */}
+      <TouchableOpacity style={ styles.removeTouchableOp } 
+        onPress={ () => props.remove(props.item.id) }
+      >
+      < Icon name="trash-o" style={ styles.trashIcon } />
       
-      <TouchableOpacity style={ styles.remove} onPress={ () => props.remove(props.item.id) }>
-      
-      < Icon name="trash-o" size={20} color="blue" onPress={ () => props.remove(props.item.id) }/>
-      
+      {/*   For more setting (Edit, Delete, Mark as done)   
+      <Icon.Button name="trash-o" backgroundColor="transparent" >
+        <Text > delete</Text>
+      </Icon.Button>
+       */}
+       
       </TouchableOpacity>
 
 
-      <TouchableOpacity style={ styles.markDone} disabled={(props.item.status ) ? true: false } onPress={ () => props.update(props.item.id) }>
-      
-      < Icon name="bookmark-o" size={20} color="blue" onPress={ () => props.update(props.item.id) }/>
-      
+      <TouchableOpacity style={ styles.markTouchableOp} 
+        onPress={ () => props.update(props.item.id) }
+      >
+      < Icon name="bookmark-o" style={ styles.bookmarkIcon } />
       </TouchableOpacity>
 
     </View>
@@ -33,19 +37,25 @@ export function ListItem ( props ) {
 
 const styles = StyleSheet.create({
     item: {
-      padding: 10,
+      padding: 5,
       flex: 1,
       justifyContent: 'center',
     },
-    itemText: {
-      fontSize: 20,
-      
+
+    itemNameText: {
+      fontSize: 14,
+      fontWeight: 'bold'
     },
+
+    itemDateText: {
+      fontSize: 10,
+    },
+
     itemTextDone: {
         fontSize: 40,
     },
 
-    remove: {
+    removeTouchableOp: {
       
       position: 'absolute',
       right: 20,
@@ -53,12 +63,20 @@ const styles = StyleSheet.create({
       
     },
 
-    markDone: {
+    markTouchableOp: {
       position: 'absolute',
       right: 50,
       justifyContent: 'center',
-    }
+    }, 
+
+    trashIcon: {
+      fontSize:20,
+      color:"blue",
+    },
+
+    bookmarkIcon: {
+      fontSize:20,
+      color:"blue",
+    },
 
   })
-
- 

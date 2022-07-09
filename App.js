@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, ImageBackground, Image, Text, View } from 'react-native'
+import { StyleSheet, ImageBackground, Image, Text, View, SafeAreaView } from 'react-native'
 import { TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { useState, useEffect, useRef} from 'react'
 import constants from 'expo-constants'
@@ -9,6 +9,7 @@ import { ListEmpty } from './components/ListEmpty'
 import { ListFooter } from './components/ListFooter'
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 
 
@@ -34,22 +35,24 @@ export default function App() {
 
 
 // Hard coded task
-  const upcomingList = [
-    { id: '1', name: 'First application', status: false},
-    { id: '2', name: 'Application presentation', status: false},
-    { id: '3', name: 'Final Application submission', status: false},
-  ]
+  // const upcomingList = [
+  //   { id: '1', name: 'First application', status: false},
+  //   { id: '2', name: 'Application presentation', status: false},
+  //   { id: '3', name: 'Final Application submission', status: false},
+  // ]
 
-  const completedList = [
-    { id: '01', name: 'Draft proposal', status: false},
-    { id: '02', name: 'Wireframe layout', status: false},
-    { id: '33', name: 'Mockup design', status: false},
-  ]
+  // const completedList = [
+  //   { id: '01', name: 'Draft proposal', status: false},
+  //   { id: '02', name: 'Wireframe layout', status: false},
+  //   { id: '33', name: 'Mockup design', status: false},
+  // ]
 
 // Application state
-const [upListData, setUpListData] = useState(upcomingList)
-const [compListData, setCompListData] = useState(completedList)
-const [ starting, setStarting ] = useState ( true)
+const [ upListData, setUpListData ] = useState([])
+const [ compListData, setCompListData ] = useState([])
+const [ starting, setStarting ] = useState (true)
+
+const [ markedItem, setMarkedItem ] = useState([])
 
 // using reference to implement the clear() method
 const txtInput = useRef()
@@ -62,36 +65,50 @@ const [input, setInput] = useState('')
 const saveData = () => {
   storage.save({
     key: 'localListData', // Note: Do not use underscore("_") in key!
-    data: JSON.stringify(upListData)
+    data: JSON.stringify(upListData, compListData)
   });  
 }
 
 const loadData = () => {
-storage
-.load({
-  key: 'localListData',
-})
-  .then((data) => {
-    setUpListData(JSON.parse(data))
+  storage
+  .load({
+    key: 'localListData',
   })
-}
+    .then((data) => {
+      setUpListData(JSON.parse(data)),
+      setCompListData(JSON.parse(data))
+    })
+  }
 
 // Insert the task at the top of the list by using sort() method
-const sortList = (arr) => {
+const sortListUpcoming = (arr) => {
   let newSortedList = arr.sort (( item1, item2) => {
     return item2.id - item1.id
   })
   setUpListData(newSortedList)
 }
 
+// Insert the task at the top of the list by using sort() method
+const sortListCompleted = (arr) => {
+  let newSortedList = arr.sort (( item1, item2) => {
+    return item2.id - item1.id
+  })
+  setCompListData(newSortedList)
+}
+
  /*useEffect Hook is use when there are changes in the object 
  declared inside the scope of the function itself*/
  useEffect( () => {
-  sortList(upListData)
+  sortListUpcoming(upListData)
   saveData()
   }, 
   [ upListData] )
 
+useEffect( () => {
+  sortListCompleted(compListData)
+  saveData()
+  }, 
+  [ compListData] )
 
 useEffect (() => {
   if (starting) {
@@ -100,58 +117,108 @@ useEffect (() => {
   }
 })
 
-// This function determine an update tou our array.
-const updateStatus = (itemID) => {
-  let newList = upListData.map ( (item) => {
-   if (item.id === itemID) {
-     return { id: item.id, name: item.name, status: true}
-   }
-     else {
-       return item
-     }
-   })
-     setUpListData (newList)
-   }
-
 
 /*Function declaration and definition to add input value to the upListData 
 adding item to our upcoming list data*/
 const addItem = () => {
   //console.log ('Pressed'); // Testing only
-  // Timestamp to generate unique ID
+  
+  // We use Timestamp to generate unique ID
   let newId = new Date().getTime()
-  let newItem = {id: newId, name: input, status: false}
+  let newDate = new Date().getDate()
+  let newMonth = new Date().getMonth() + 1;
+  let newYear = new Date().getFullYear();
+  let fullDate = newDate + '/' + newMonth + '/' + newYear
+  let newItem = {id: newId, name: input, date: fullDate, status: false}
   let newList = upListData.concat( newItem )
   setUpListData(newList)
-  txtInput.current.clear()
+  txtInput.current.clear() // clear textbox after hitting the add button
 }
 
-
-/*Function declaration and definition to delete input value to the upListData 
-adding item to our upcoming list data*/ 
+// Function declaration and definition to delete task from upListData
 const deleteItem = ( itemId ) => {
-  // find the item id
-  // remove item with the id from array (ListData)
+  
+  // find the item id as key then remove the value using filter() method
   const newList = upListData.filter( (item) => {
     if( item.id !== itemId ) {
       return item
     }
   })
-  // setListData( new array )
   setUpListData( newList )
 }
 
+// Function declaration and definition to mark task as done
+const updateStatus = (itemId) => {
+  let newUpdatedItem = ([])
+  let newList = upListData.map ( (item) => {
+   if (item.id === itemId) {
+    console.log('Updated')// testing only
+     return newUpdatedItem = { id: item.id, name: item.name, date: item.fullDate, status: true }
+   }
+     else {
+       return item
+     }
+   })
+
+   let newList2 = upListData.filter ((item) => {
+   if (item.id !== itemId) {
+    
+     return item
+   }
+   
+   })
+   setUpListData(newList2)
+   
+  //setUpListData(newList)
+
+    setMarkedItem(newUpdatedItem)
+    let newCompletedList = compListData.concat( newUpdatedItem )
+    
+    setCompListData(newCompletedList)
+   }
+
+// // Function declaration and definition to mark task as done
+// const updateStatus = (itemId) => {
+//   let newItem1 = []
+//   let newList = upListData.map ( (item) => {
+//    if (item.id === itemId) {
+    
+//      return newItem1 = { id: item.id, name: item.name, status: true
+      
+//     }
+//    }
+//      else {
+//        return item
+//      }
+//    })
+
+//    let newCompList = compListData.concat( newItem1 )
+//      setCompListData(newCompList)
+  
+//    }
 
 
-// Function to render list item
+// Function to render list of items in the array
 const renderItem = ({item}) => (
+  // First method of rendering
   // <View style={ [styles.listItem, styles.listBackground] }>
-  //   <Text style={styles.listText}> {task.name} </Text>   
+  //   <Text style={styles.listText}> {item.name} </Text> 
+  //   <Text style={styles.listText}> {item.id} </Text> 
   // </View>
-  <ListItem item={item} remove={ deleteItem } update= {updateStatus} />
+
+  // Second method of rendering
+  <ListItem item={item} remove={ deleteItem } update= {updateStatus} /> 
   )
 
+
+  const Init = () => {
+    setInput('')
+    setMarkedItem({deleteItem }) 
+  }
+
+
   return (
+    
     <View style={styles.container}>
 
       <View style = {styles.header}>
@@ -162,25 +229,57 @@ const renderItem = ({item}) => (
         
         <TouchableOpacity 
           style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
-          onPress={ () => addItem()} 
           disabled = { (input.length < 3) ? true : false }
+          onPress={ () => {addItem(), Init()}}
+          
         >
     
-        <Text style= {(input.length < 3) ? styles.buttonTextDisabled : styles.button}> Add </Text>
+        <Text style= { (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}> 
+          Add 
+        </Text>
         </TouchableOpacity>
-
+        
+        
       </View>
+
+        <View style={styles.upcomingScreen}>  
+          <Text> Upcoming task </Text>
+          
+
+        </View>
 
       <FlatList 
         data={upListData}
         keyExtractor={ (item)  => item.id }
         renderItem=  {renderItem}
         ItemSeparatorComponent={ ListSeparator }
+        //extraData={[getCurrentDate, status]}
+        ListEmptyComponent= { ListEmpty } // For no items in the list
+        ListFooterComponent= { ListFooter }// call the ListComponent component
+
+        // Overriding method
+        // ListFooterComponent={ <ListFooter text="End of task list" />}
+  
+      />
+
+      <View style={styles.completedScreen}>  
+          <Text> Completed task </Text>
+          <Text> Recently completed task </Text>
+          <Text> {markedItem.name} </Text>
+      </View>
+
+      <FlatList 
+        data={compListData}
+        keyExtractor={ (item)  => item.id }
+        renderItem=  {renderItem}
+        ItemSeparatorComponent={ ListSeparator }
         ListEmptyComponent= { ListEmpty } // For no items in the list
         ListFooterComponent={ <ListFooter text="This is the end of task list" />}
       />
-
+      
+     
     </View>
+     
   );
 }
 
@@ -189,15 +288,33 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: constants.statusBarHeight,
     backgroundColor: '#0bcdd4',
-    //alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
-    
   },
+
   listItem: {
     padding: 10,
   },
+
+  upcomingScreen: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    padding:5, 
+    alignItems: 'center', 
+    margin: 10,
+  },
+
+  completedScreen: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    padding:5, 
+    alignItems: 'center', 
+    margin: 10,
+  },
+
+
  ////=========to be modified======////
+
   listText: {
     fontSize: 20,
   },
@@ -235,5 +352,6 @@ const styles = StyleSheet.create({
 
   buttonTextDisabled: {
     backgroundColor: '#ccc',
-  }
+  },
+
 });

@@ -9,6 +9,6 @@ export function ListSeparator ( props ) {
 const styles = StyleSheet.create({
   separator: {
     padding: 1,
-    backgroundColor: '#gray',
+    backgroundColor: 'gray',
   }
 })
