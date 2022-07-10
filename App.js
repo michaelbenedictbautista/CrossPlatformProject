@@ -9,6 +9,8 @@ import { ListEmpty } from './components/ListEmpty'
 import { ListFooter } from './components/ListFooter'
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Icon from 'react-native-vector-icons/AntDesign'
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -152,18 +154,14 @@ const deleteItem= ( itemId ) => {
     }
   })
   setCompListData( newListCompleted )
-
-
-
 }
 
 
 // Function declaration and definition to mark task as done
 const updateStatus = (itemId) => {
   let newUpdatedItem = ([])
-  let newList = upListData.map ( (item) => {
+  upListData.map ( (item) => {
    if (item.id === itemId) {
-    console.log('Updated')// testing only
      return newUpdatedItem = { id: item.id, name: item.name, date: item.fullDate, status: true }
    }
      else {
@@ -218,20 +216,27 @@ const renderItem = ({item}) => (
 
   // Second method of rendering
   <ListItem item={item} remove={ deleteItem } update= {updateStatus} /> 
- // <ListItem item={item} remove={{ deleteItemUpcoming, deleteItemCompleted }} update= {updateStatus} /> 
-
+ 
   )
 
 
   const Init = () => {
     setInput('')
-    setMarkedItem({deleteItem }) 
+    //setMarkedItem({deleteItem }) 
   }
 
 
   return (
     
     <View style={styles.container}>
+      
+      <View>
+        <LinearGradient 
+        colors={['blue', 'cyan']} 
+        start={{ x: 1, y: 1 }}  
+        end={{ x: 0, y: 0 }}
+        style={styles.box} />
+      </View>
 
       <View style = {styles.header}>
         <TextInput  style = {styles.input} 
@@ -240,7 +245,7 @@ const renderItem = ({item}) => (
           ref = {txtInput}
         />
         
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
           disabled = { (input.length < 3) ? true : false }
           onPress={ () => {addItem(), Init()}}
@@ -250,15 +255,23 @@ const renderItem = ({item}) => (
         <Text style= { (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}> 
           Add 
         </Text>
-        </TouchableOpacity>
-        
-        
+        </TouchableOpacity> */}
+
       </View>
+  
+    
+      <TouchableOpacity>   
+        <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
+          disabled = { (input.length < 3) ? true : false }
+          onPress={ () => {addItem(), Init()}}>
+          <Text style={ (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
+            Add task
+          </Text>
+        </Icon.Button>
+      </TouchableOpacity>
 
-        <View style={styles.upcomingScreen}>  
-          <Text> Upcoming task </Text>
-          
-
+        <View style={styles.upcomingScreenContainer}>  
+          <Text style={styles.upcomingScreen}> Upcoming task </Text>
         </View>
 
       <FlatList 
@@ -275,10 +288,10 @@ const renderItem = ({item}) => (
   
       />
 
-      <View style={styles.completedScreen}>  
-          <Text> Completed task </Text>
-          <Text> Recently completed task </Text>
-          <Text> {markedItem.name} </Text>
+      <View style={styles.completedScreenContainer}>  
+          <Text style={styles.completedScreen}> Completed task </Text>
+          <Text style={{fontSize: 14, fontWeight: 'bold'}}> Recently completed task </Text>
+          <Text style={{fontSize: 10}}> {markedItem.name} </Text>
       </View>
 
       <FlatList 
@@ -301,38 +314,37 @@ const styles = StyleSheet.create({
     marginTop: constants.statusBarHeight,
     backgroundColor: '#0bcdd4',
     justifyContent: 'center',
-    padding: 5,
   },
 
-  listItem: {
-    padding: 10,
+  box: {
+    position: 'absolute',
+    width: '100%',
+    height: 800,
+    opacity: 0.8,
+  },
+
+  upcomingScreenContainer: {
+    alignItems: 'center', 
+    margin: 5,
   },
 
   upcomingScreen: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     padding:5, 
-    alignItems: 'center', 
     margin: 10,
+  },
+
+  completedScreenContainer: {
+    alignItems: 'center', 
+    margin: 5,
   },
 
   completedScreen: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     padding:5, 
-    alignItems: 'center', 
     margin: 10,
-  },
-
-
- ////=========to be modified======////
-
-  listText: {
-    fontSize: 20,
-  },
-
-  listBackground: {
-    backgroundColor: 'white',
   },
 
   input: {
@@ -349,21 +361,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  buttonDisabled: {  
+    backgroundColor: 'gray',
+    color: 'gray',
+  
+  },
+
   button: {
-    backgroundColor: '#00ff00',
-    padding: 5,
+    backgroundColor: 'blue',
+  },
+
+  buttonTextDisabled: {
+    fontSize: 20,
+    backgroundColor: 'transparent',
   },
 
   buttonText: {
     fontSize: 20,
-  },
-
-  buttonDisabled: {
-    backgroundColor: "#ccc",
-  },
-
-  buttonTextDisabled: {
-    backgroundColor: '#ccc',
+    fontWeight: 'bold',
+    color: 'white',
   },
 
 });

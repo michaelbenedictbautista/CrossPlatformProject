@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-// import Icon from 'react-native-vector-icons/lonicons'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 export function ListItem ( props ) {
     return (
@@ -12,7 +11,7 @@ export function ListItem ( props ) {
       <TouchableOpacity style={ styles.removeTouchableOp } 
         onPress={ () => props.remove(props.item.id) }
       >
-      < Icon name="trash-o" style={ styles.trashIcon } />
+      < Icon name="delete" style={ styles.trashIcon } />
       
       {/*   For more setting (Edit, Delete, Mark as done)   
       <Icon.Button name="trash-o" backgroundColor="transparent" >
@@ -26,7 +25,7 @@ export function ListItem ( props ) {
       <TouchableOpacity style={ styles.markTouchableOp} 
         onPress={ () => props.update(props.item.id) }
       >
-      < Icon name="bookmark-o" style={ styles.bookmarkIcon } />
+      < Icon name="check" style={ styles.bookmarkIcon } />
       </TouchableOpacity>
 
     </View>
@@ -43,24 +42,24 @@ const styles = StyleSheet.create({
     },
 
     itemNameText: {
-      fontSize: 14,
-      fontWeight: 'bold'
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#00365C',
     },
 
     itemDateText: {
-      fontSize: 10,
+      fontSize: 14,
+      color: '#0062A8',
     },
 
     itemTextDone: {
         fontSize: 40,
     },
 
-    removeTouchableOp: {
-      
+    removeTouchableOp: { 
       position: 'absolute',
       right: 20,
       justifyContent: 'center',
-      
     },
 
     markTouchableOp: {
@@ -71,12 +70,12 @@ const styles = StyleSheet.create({
 
     trashIcon: {
       fontSize:20,
-      color:"blue",
+      color:"white",
     },
 
     bookmarkIcon: {
       fontSize:20,
-      color:"blue",
+      color:"white",
     },
 
   })
