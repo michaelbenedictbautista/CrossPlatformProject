@@ -2,21 +2,18 @@ import { View, Text, StyleSheet } from 'react-native'
 
 export function ListEmpty ( props ) {
     return  (
-        <View style={ styles.listEmptyContainer }>  
-            <Text style={ styles.listEmptyText }>Empty List</Text>
-        </View>
-        
+        <View style={ styles.emptyContainer }>  
+            <Text style={ styles.emptyText }>Empty List</Text>
+        </View> 
     )
-
 }
 
 const styles = StyleSheet.create ({
-    listEmptyContainer: {
+    emptyContainer: {
         alignItems:'center',
     },
 
-    listEmptyText: {
+    emptyText: {
         fontWeight: 'bold',
-        
     },
 })

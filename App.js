@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, ImageBackground, Image, Text, View, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity, FlatList, TextInput } from 'react-native'
 import { useState, useEffect, useRef} from 'react'
 import constants from 'expo-constants'
@@ -10,10 +10,7 @@ import { ListFooter } from './components/ListFooter'
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/AntDesign'
-import { LinearGradient } from 'expo-linear-gradient';
-
-
-
+import { LinearGradient } from 'expo-linear-gradient'
 
 export default function App() {
 
@@ -26,34 +23,21 @@ export default function App() {
     If storageBackend is not set, data will be lost after reload.*/
     storageBackend: AsyncStorage, // for web: window.localStorage
   
-    /*expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
-    // we set the the deualtExpiration to null*/
+    /* Expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
+    // we set the the defaultExpiration to null*/
     defaultExpires: null,
   
-    // enable cache data in our memory
+    // Enable cache data in our memory
     enableCache: true,
   
   });
-
-
-// Hard coded task
-  // const upcomingList = [
-  //   { id: '1', name: 'First application', status: false},
-  //   { id: '2', name: 'Application presentation', status: false},
-  //   { id: '3', name: 'Final Application submission', status: false},
-  // ]
-
-  // const completedList = [
-  //   { id: '01', name: 'Draft proposal', status: false},
-  //   { id: '02', name: 'Wireframe layout', status: false},
-  //   { id: '33', name: 'Mockup design', status: false},
-  // ]
 
 // Application state
 const [ upListData, setUpListData ] = useState([])
 const [ compListData, setCompListData ] = useState([])
 const [ starting, setStarting ] = useState (true)
 
+// getters and setters for task done
 const [ markedItem, setMarkedItem ] = useState([])
 
 // using reference to implement the clear() method
@@ -62,7 +46,6 @@ const txtInput = useRef()
 // Set input to empty string as a default state
 const [input, setInput] = useState('')
 
-
 // Function definition and declaration for saving and loading data from local storage
 const saveData = () => {
   storage.save({
@@ -70,6 +53,7 @@ const saveData = () => {
     data: JSON.stringify(upListData, compListData)
   });  
 }
+
 
 const loadData = () => {
   storage
@@ -82,7 +66,7 @@ const loadData = () => {
     })
   }
 
-// Insert the task at the top of the list by using sort() method
+// Insert the task at the top of the upListData by using sort() method
 const sortListUpcoming = (arr) => {
   let newSortedList = arr.sort (( item1, item2) => {
     return item2.id - item1.id
@@ -90,7 +74,7 @@ const sortListUpcoming = (arr) => {
   setUpListData(newSortedList)
 }
 
-// Insert the task at the top of the list by using sort() method
+// Insert the task at the top of the compListData by using sort() method
 const sortListCompleted = (arr) => {
   let newSortedList = arr.sort (( item1, item2) => {
     return item2.id - item1.id
@@ -98,7 +82,7 @@ const sortListCompleted = (arr) => {
   setCompListData(newSortedList)
 }
 
- /*useEffect Hook is use when there are changes in the object 
+ /* UseEffect Hook is use when there are changes in the object 
  declared inside the scope of the function itself*/
  useEffect( () => {
   sortListUpcoming(upListData)
@@ -120,11 +104,10 @@ useEffect (() => {
 })
 
 
-/*Function declaration and definition to add input value to the upListData 
+/*Function declaration and definition to add input value to the upListData
 adding item to our upcoming list data*/
 const addItem = () => {
-  //console.log ('Pressed'); // Testing only
-  
+
   // We use Timestamp to generate unique ID
   let newId = new Date().getTime()
   let newDate = new Date().getDate()
@@ -137,7 +120,7 @@ const addItem = () => {
   txtInput.current.clear() // clear textbox after hitting the add button
 }
 
-// Function declaration and definition to delete task from upListData
+// Function declaration and definition to delete task from upListData and compListData
 const deleteItem= ( itemId ) => {
   
   // find the item id as key then remove the value using filter() method
@@ -175,56 +158,29 @@ const updateStatus = (itemId) => {
    }
    
    })
+    // re-render uplistaData
     setUpListData(newList2)
     
-    //setUpListData(newList)
-
+    // set status as mark
     setMarkedItem(newUpdatedItem)
     let newCompletedList = compListData.concat( newUpdatedItem )
     
+    // re-render compListData
     setCompListData(newCompletedList)
    }
-
-// // Function declaration and definition to mark task as done
-// const updateStatus = (itemId) => {
-//   let newItem1 = []
-//   let newList = upListData.map ( (item) => {
-//    if (item.id === itemId) {
-    
-//      return newItem1 = { id: item.id, name: item.name, status: true
-      
-//     }
-//    }
-//      else {
-//        return item
-//      }
-//    })
-
-//    let newCompList = compListData.concat( newItem1 )
-//      setCompListData(newCompList)
-  
-//    }
 
 
 // Function to render list of items in the array
 const renderItem = ({item}) => (
-  // First method of rendering
-  // <View style={ [styles.listItem, styles.listBackground] }>
-  //   <Text style={styles.listText}> {item.name} </Text> 
-  //   <Text style={styles.listText}> {item.id} </Text> 
-  // </View>
 
-  // Second method of rendering
+  // rendering our list of items(tasks)
   <ListItem item={item} remove={ deleteItem } update= {updateStatus} /> 
- 
   )
 
-
+  // initialise function to set variable to desired useState.
   const Init = () => {
     setInput('')
-    //setMarkedItem({deleteItem }) 
   }
-
 
   return (
     
@@ -245,21 +201,8 @@ const renderItem = ({item}) => (
           ref = {txtInput}
         />
         
-        {/* <TouchableOpacity 
-          style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
-          disabled = { (input.length < 3) ? true : false }
-          onPress={ () => {addItem(), Init()}}
-          
-        >
-    
-        <Text style= { (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}> 
-          Add 
-        </Text>
-        </TouchableOpacity> */}
-
       </View>
   
-    
       <TouchableOpacity>   
         <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
           disabled = { (input.length < 3) ? true : false }
@@ -275,17 +218,12 @@ const renderItem = ({item}) => (
         </View>
 
       <FlatList 
-        data={upListData}
-        keyExtractor={ (item)  => item.id }
-        renderItem=  {renderItem}
-        ItemSeparatorComponent={ ListSeparator }
-        //extraData={[getCurrentDate, status]}
+        data={upListData} // this holds th data for upListData
+        keyExtractor={ (item)  => item.id } // definitive id fthat will serve as a key for an item
+        renderItem=  {renderItem} // render all property of an item
+        ItemSeparatorComponent={ ListSeparator } // separator for each tasks
         ListEmptyComponent= { ListEmpty } // For no items in the list
         ListFooterComponent= { ListFooter }// call the ListComponent component
-
-        // Overriding method
-        // ListFooterComponent={ <ListFooter text="End of task list" />}
-  
       />
 
       <View style={styles.completedScreenContainer}>  
@@ -295,7 +233,7 @@ const renderItem = ({item}) => (
       </View>
 
       <FlatList 
-        data={compListData}
+        data={compListData} // this holds th data for upListData
         keyExtractor={ (item)  => item.id }
         renderItem=  {renderItem}
         ItemSeparatorComponent={ ListSeparator }

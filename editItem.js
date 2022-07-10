@@ -2,18 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,Image,TouchableOpacity,TextInput,ScrollView,SafeAreaView } from 'react-native';
 import { useState, useEffect} from 'react'
 
-
 export default function App() {
   
-  
-
   const [currentDate,setcurrentDate]= useState('')
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [date, setDate] = useState('');
 
 useEffect(() => {
-    
  
     var date = new Date().getDate()
     var month = new Date().getMonth()+1
@@ -25,12 +21,10 @@ useEffect(() => {
         date + '/'+ month + '/' + year + '/' + hours + ':' + mins + ':'+ sec
       )
       return () =>{
-
      }
 
     },[])
 
-  
 return (
 
 <View style={styles.container}>
@@ -155,8 +149,6 @@ return (
 
 </TouchableOpacity>
 
-
-
 <TouchableOpacity style={styles.navFormat}>
   <Image style ={styles.navIcon}
   source={require("./images/notification.png")}
@@ -173,12 +165,9 @@ return (
 </View>
 
       </View>
-      
-
+  
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -320,7 +309,5 @@ const styles = StyleSheet.create({
     marginLeft:150,
     alignItems: 'center',
     justifyContent: 'center'
-
-  }
-
+  },
 });

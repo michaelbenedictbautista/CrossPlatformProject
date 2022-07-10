@@ -4,8 +4,7 @@ export function ListFooter ( props ) {
     return (
         <View style={ styles.container }>  
             {/* <Text > {props.text} </Text> */}
-            <Text style={ styles.text }> End of task list </Text>
-            
+            <Text style={ styles.text }> End of task list </Text>       
         </View>
     )
 }
@@ -17,6 +16,6 @@ const styles = StyleSheet.create({
 
     text: {
         fontSize: 12,
-    }
+    },
 
 });
