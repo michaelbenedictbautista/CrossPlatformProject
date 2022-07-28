@@ -1,15 +1,17 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
+import { HomeScreen } from './HomeScreen'
 
-export function SignupScreen( {navigation} ) {
+export function SignupScreen( props ) {
+  const navigation = useNavigation();
 
   // Declaring UseState for both email and password
   const [email, setEmail] = useState('')
   const [validEmail, setValidEmail] = useState(false)
-
-  const [Password, setPassword] = useState()
-  const [validPassowrd, setValidPassword] = useState(false)
+  const [password, setPassword] = useState('')
+  const [validPassword, setValidPassword] = useState()
 
   //function to validate email
   const validateEmail = ( emailStr ) => {
@@ -22,18 +24,39 @@ export function SignupScreen( {navigation} ) {
       return false
     }
   }
-
+  //function to validate password
   const validatePassword = (passwordStr) => {
     const passLength = passwordStr.length
+    if (passLength >= 8) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
 
+  const signUp = ( email, password ) => {
+    props.signup( email, password )
   }
 
   useEffect( () => {
-    console.log( validateEmail( email ) )
+    // console.log( validateEmail( email ) )
     if ( validateEmail( email ) ) {
       setValidEmail( true )
     }
-  }, [email] )
+    else { setValidEmail( false ) }
+    if ( validatePassword( password ) ) {
+      setValidPassword( true )
+    }
+    else { setValidPassword( false ) }
+  }, [ email, password ] )
+
+  useEffect( () => {
+    // auth is passed on as a prop from App.js
+    if( props.auth ) {
+      navigation.reset( { index: 0, routes: [ {name: "Home"} ]} )
+    }
+  }, [ props.auth ])
 
   return (
     <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
@@ -49,12 +72,13 @@ export function SignupScreen( {navigation} ) {
       <Text style = {styles.label}>Password</Text>
       <TextInput style = {styles.input} secureTextEntry={true} onChangeText={ (value) => setPassword (value) }/>
 
-      <TouchableOpacity style= {styles.button} o>
+      <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
+      disabled={ (validEmail && validPassword) ? false : true }
+      onPress={() => {signUp(email, password)}}>
           <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
 
     </View>
-
 
     <TouchableOpacity onPress={ () => navigation.navigate('Signin')}>
         <Text>Go to Sign in</Text>
@@ -107,6 +131,11 @@ const styles = StyleSheet.create( {
     alignItems: 'center',
     padding: 10,
     borderRadius: 300,
+  },
+
+  buttonDisabled: {
+    backgroundColor: 'gray',
+    padding: 10,
   },
 
   buttonText: {

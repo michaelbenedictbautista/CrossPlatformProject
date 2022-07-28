@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native'
-
 import { useState, useEffect, useRef } from 'react'
+
+import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity, Share } from 'react-native'
 
 /// Components
@@ -18,7 +19,8 @@ import constants from 'expo-constants'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export function HomeScreen( navigation ) {
+export function HomeScreen( props ) {
+  const navigation = useNavigation();
 
   // Local storage
   const storage = new Storage({
@@ -43,6 +45,8 @@ export function HomeScreen( navigation ) {
   const [ compListData, setCompListData ] = useState([])
   const [ starting, setStarting ] = useState (true)
   const [ qrvalue, setQrvalue ] = useState('');
+  const [ qrValueDate, setQrValueDate ] = useState('');
+
 
   // getters and setters for task done
   const [ markedItem, setMarkedItem ] = useState([])
@@ -187,9 +191,15 @@ const generateCode = (itemId) => {
       return item
     }
   })
-  setQrvalue(newGeneratedItem.name)
+  setQrvalue( newGeneratedItem.name)
+  setQrValueDate( newGeneratedItem.date )
 
 }
+
+// const indentSpacing =()=> {
+//   let indent = concat( newItem )
+//   let newList = upListData.concat( newItem )
+// }
 
 
 // Function to share QR code
@@ -216,11 +226,14 @@ const shareQRCode = () => {
    const Init = () => {
     setInput('')
     setQrvalue('')
+    setQrValueDate('')
+    
   }
     
   return (
 
     <View style={styles.homeContainer}>
+      
        <LinearGradient 
         style={styles.box}
         colors={['blue', 'cyan']} 
@@ -228,30 +241,30 @@ const shareQRCode = () => {
         end={{ x: 0, y: 0 }}
         />
       
-      <View>
+      <View style={styles.QrCodeContainer}>
       
         <QRCode
-
           getRef={(ref) => (myQRCode = ref)}
 
           //QR code value
-          value={qrvalue ? qrvalue : 'NA'}
+          // value={qrvalue ? qrvalue : 'NA'}
+          value={[qrvalue, qrValueDate]}
           //size of QR Code
-          size={100}
+          size={150}
           //Color of the QR Code (Optional)
           color="black"
           //Background Color of the QR Code
           backgroundColor="white"
           logo={require('../assets/logo.png')}
           logoSize={15}
-          logoMargin={2}
+          logoMargin={4}
           justifyContent='center'
         />
         {/* Function button to share generated task */}
         <TouchableOpacity
           style={styles.shareButtonStyle}
           onPress={shareQRCode}>
-          <Icon.Button name="save"></Icon.Button>
+          <Icon style={styles.shareButtonIcon} name="save"/>
           <Text style={styles.shareButtonTextStyle}>
             Share QR code
           </Text>
@@ -396,17 +409,36 @@ const styles = StyleSheet.create( {
     color: 'white',
   },
 
-  shareButtonStyle: {
+  QrCodeContainer: {
+    flex: 1,
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'center',
+    padding: 5,
+    marginTop: 5,
+  },
+
+  shareButtonStyle: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 5,
+    padding: 5,
     borderRadius: 300,
+    backgroundColor: 'cyan',
+  },
+
+  shareButtonIcon: {
+    
+    color:"white",
+    
   },
 
   shareButtonTextStyle: {
     fontWeight: 'bold',
     fontSize: 10,
   },
-   
 
+  
+   
 
 } )
