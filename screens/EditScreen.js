@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,Image,TouchableOpacity,TextInput,ScrollView,SafeAreaView } from 'react-native';
 import { useState, useEffect} from 'react'
 
-export default function App() {
+import { StyleSheet, Text, View,Image,TouchableOpacity,TextInput,ScrollView,SafeAreaView } from 'react-native';
+
+
+export function EditScreen({navigation}) {
   
   const [currentDate,setcurrentDate]= useState('')
   const [title, setTitle] = useState('');
@@ -35,7 +37,7 @@ return (
 
             style={styles.backImage}
 
-            source={require("./images/back.png")} />
+            source={require("../images/back.png")} />
         </TouchableOpacity>
 
         <Text style={{
@@ -44,7 +46,7 @@ return (
         <TouchableOpacity>
           <Image
             style={styles.deleteImage}
-            source={require("./images/delete.png")} />
+            source={require("../images/delete.png")} />
         </TouchableOpacity>
       </View>
       <ScrollView>
@@ -73,7 +75,7 @@ return (
             top: 22,}}>
        <Image style={styles.calendarIcon}
             
-            source={require("./images/calendar.png")} />
+            source={require("../images/calendar.png")} />
        </TouchableOpacity>
        </Text>
       </View>
@@ -118,6 +120,10 @@ return (
      </TouchableOpacity>
    </View>  
 
+   <TouchableOpacity onPress={ () => navigation.navigate('Signup')}>
+        <Text>Go to Sign up</Text>
+    </TouchableOpacity>
+
 
 </ScrollView>
 
@@ -129,7 +135,7 @@ return (
   <View style={styles.navBackground}>
 <TouchableOpacity style={styles.navFormat}>
   <Image style={styles.navIcon}
-  source={require("./images/home.png")}
+  source={require("../images/home.png")}
   />
   <Text style={styles.navText}>
     Home
@@ -139,7 +145,7 @@ return (
 
 <TouchableOpacity style={styles.navFormat}>
 <Image style ={styles.navAddIcon}
-  source={require("./images/addTask.png")}
+  source={require("../images/addTask.png")}
   />
 
   <Text style={styles.navAddText}>
@@ -151,7 +157,7 @@ return (
 
 <TouchableOpacity style={styles.navFormat}>
   <Image style ={styles.navIcon}
-  source={require("./images/notification.png")}
+  source={require("../images/notification.png")}
   />
 
   <Text style={styles.navText}>

@@ -87,6 +87,11 @@ export function SignupScreen( props ) {
     <TouchableOpacity onPress={ () => navigation.navigate('Home', {name: 'Custom Home header'})}>
         <Text>Go to Home</Text>
     </TouchableOpacity>
+
+    <TouchableOpacity onPress={ () => navigation.navigate('Edit')}>
+        <Text>Go to Edit task</Text>
+    </TouchableOpacity>
+
     </KeyboardAvoidingView>
   )
 }

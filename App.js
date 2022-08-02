@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './screens/HomeScreen';
 import { SigninScreen } from './screens/SigninScreen';
 import { SignupScreen } from './screens/SignupScreen';
+import { EditScreen } from './screens/EditScreen';
 import { SignoutButton } from './screens/SignupScreen';
 
 
@@ -86,6 +87,8 @@ const [user,setUser] = useState()
       {/* <Stack.Screen name="Home" options={{  headerTitle: (props) => <LogoTitle {...props}/> }}>
       {(props) => <Home {...props} auth={user} />}
       </Stack.Screen> */}
+
+      <Stack.Screen name="Edit" component={EditScreen} options={{ title: 'Edit Task' }} />
       
     </Stack.Navigator>
   </NavigationContainer>
