@@ -22,6 +22,14 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export function HomeScreen( props ) {
   const navigation = useNavigation();
 
+  useEffect( () => {
+    if( !props.auth ) {
+      navigation.reset( { index: 0, routes: [ {name: "Signup"} ]} )
+    }  
+  }, [props.auth] )
+
+
+
   // Local storage
   const storage = new Storage({
     // maximum capacity, default 1000 key-ids
@@ -229,6 +237,8 @@ const shareQRCode = () => {
     setQrValueDate('')
     
   }
+
+  
     
   return (
 
@@ -283,7 +293,7 @@ const shareQRCode = () => {
       <TouchableOpacity>   
         <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
           disabled = { (input.length < 3) ? true : false }
-          onPress={ () => {addItem(), Init()}}>
+          onPress={ () => {addItem(), props.add(), Init()}}>
         <Text style={ (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
           Add task
         </Text>

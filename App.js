@@ -12,17 +12,27 @@ import { HomeScreen } from './screens/HomeScreen';
 import { SigninScreen } from './screens/SigninScreen';
 import { SignupScreen } from './screens/SignupScreen';
 import { EditScreen } from './screens/EditScreen';
-import { SignoutButton } from './screens/SignupScreen';
+import { SignoutButton } from './components/SignoutButton';
 
 
 // Firebase config
-import { firebaseConfig } from './config/config';
+import { firebaseConfig } from './config/config'
 import { initializeApp } from 'firebase/app'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getFirestore, collection, addDoc, } from 'firebase/firestore'
 
-// Initialise the app
-initializeApp(firebaseConfig)
+import { getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        signOut, 
+        onAuthStateChanged} from 'firebase/auth'
 
+// Initialise the firebase app abd save reference
+const FBapp = initializeApp(firebaseConfig)
+
+// Initialise the firestore
+const db = getFirestore(FBapp)
+
+// Customised logo
 function LogoTitle() {
   return (
     <View style={styles.logoContainer}>
@@ -30,7 +40,7 @@ function LogoTitle() {
         style={styles.logoImage}
         source={require('./assets/logo.png')}
       />
-      <Text style = {styles.titleText}>My Signup</Text>
+      {/* <Text style = {styles.titleText}>My Signup</Text> */}
     </View>
     
   );
@@ -43,8 +53,18 @@ export default function App() {
 //const [auth, setAuth] =  useState(false)
 const [user,setUser] = useState()
 
+const authObj = getAuth()
+  onAuthStateChanged(authObj, (user) => {
+    if (user ) {
+      setUser(user)
+    }
+    else {
+      setUser(null)
+    }
+  })
+
   const register = (email, password) => {
-    const authObj = getAuth()
+    
     createUserWithEmailAndPassword(authObj, email, password)
       .then((userCredential) => {
         setUser(userCredential.user)
@@ -53,6 +73,44 @@ const [user,setUser] = useState()
         console.log(error)
       })
   }
+
+  const signin = ( v)=> {
+    
+    signInWithEmailAndPassword(authObj, email, password)
+    .then((userCredential) => setUser (userCredential.user))
+    .catch((error) => console.log(error) )
+    }
+  
+
+
+    const signout = () => {
+      signOut( authObj )
+      .then( () => {
+        // sign out successful
+      } )
+      .catch( () => {
+        // sign out errors
+      } )
+    }
+      
+   
+// const addData = async ( FScollection, data ) => {
+  //   // add data to a collection with FS generated id
+  //   const ref = await addDoc( collection(db,FScollection), data )
+  //   console.log( ref.id )
+  // }
+
+
+// Adding data to firestore
+const addData = async(FSCollection) => {
+    const ref = await addDoc(collection(db, "users"),  {
+     name: "Mimi",
+     photoImg: "MimiImg"
+    });
+
+    console.log(ref.id)
+}
+
 
   return (
     <NavigationContainer>
@@ -68,6 +126,7 @@ const [user,setUser] = useState()
        {/* // Passing addtional props we  */}
       {/* <Stack.Screen name="Signup" component={SignupScreen} options={{  headerTitle: (props) => <LogoTitle {...props}/> }} /> */}
       
+
       <Stack.Screen name="Signup"  options={{  headerTitle: (props) => <LogoTitle {...props}/> }}>
           { ( props ) => <SignupScreen {...props} signup={register} auth={user}/> }
         </Stack.Screen>
@@ -77,18 +136,31 @@ const [user,setUser] = useState()
           { ( props) => <SignupScreen {...props} signup={register} auth={user}/> }
         </Stack.Screen> */}
       
-      <Stack.Screen name="Signin" component={SigninScreen} options={{ title: 'My Signin' }} />
+      <Stack.Screen name="Signin" options={{ title: 'My Signin' }} >
+        { ( props ) => <SigninScreen {...props} signin={signin} auth={user}/> }
+      </Stack.Screen>
+      
+      {/* <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'My Home' }} /> */}
+      <Stack.Screen name="Home" options={{headerTitle: (props) => <LogoTitle {...props} />, headerRight: ( props ) => <SignoutButton {...props} signout={signout}/>}}
+      >
+        { (props) => <HomeScreen {...props} auth={user} add={addData} />}
+      </Stack.Screen>
 
-      
-      {/* <Stack.Screen name="Home" component={HomeScreen} options= {({route}) => ( {title: route.params.name})} /> */}
-      
-      
-      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'My Home' }} />
-      {/* <Stack.Screen name="Home" options={{  headerTitle: (props) => <LogoTitle {...props}/> }}>
-      {(props) => <Home {...props} auth={user} />}
-      </Stack.Screen> */}
+      {/* headerRight: ( props ) => <SignoutButton {...props} signout={signout} /> */}
+
+
+
+
+        {/* <Stack.Screen name="Home" options={{
+          headerTitle: "App Home",
+          headerRight: ( props ) => <SignoutButton {...props}  signout ={signout}/>
+        }}>
+          { (props) => <HomeScreen {...props} auth={user} add={addData}/> }
+        </Stack.Screen> */}
 
       <Stack.Screen name="Edit" component={EditScreen} options={{ title: 'Edit Task' }} />
+      
+      
       
     </Stack.Navigator>
   </NavigationContainer>

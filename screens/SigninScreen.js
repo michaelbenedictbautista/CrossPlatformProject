@@ -1,9 +1,16 @@
 
 import {useState, useEffect} from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
+import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps'
 
-export function SigninScreen( {navigation} ) {
+import { HomeScreen } from './HomeScreen'
+
+export function SigninScreen( props ) {
+
+ const navigation = useNavigation();
+
   // Declaring UseState for both email and password
  const [email, setEmail] = useState('')
  const [validEmail, setValidEmail] = useState(false)
@@ -33,7 +40,6 @@ const validatePassword = (passwordStr) => {
   }
 }
 
-
 useEffect( () => {
   // console.log( validateEmail( email ) )
   if ( validateEmail( email ) ) {
@@ -45,6 +51,31 @@ useEffect( () => {
   }
   else { setValidPassword( false ) }
 }, [ email, password ] )
+
+
+
+useEffect( () => {
+  // auth is passed on as a prop from App.js
+  if( props.auth ) {
+    navigation.reset( { index: 0, routes: [ {name: "Home"} ]} )
+  }
+}, [ props.auth ])
+
+
+
+
+
+
+
+// Same with signup
+ const signIn = ( email, password ) => props.signin( email, password )
+
+useEffect( () => {
+  // auth is passed on as a prop from App.js
+  if( props.auth ) {
+    navigation.reset( { index: 0, routes: [ {name: "Home"} ]} )
+  }
+}, [ props.auth ])
 
   return (
     <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
@@ -61,7 +92,9 @@ useEffect( () => {
       <TextInput style = {styles.input} secureTextEntry={true} onChangeText={ (value) => setPassword (value) }/>
 
       <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
-      disabled={ (validEmail && validPassword) ? false : true }>
+      disabled={ (validEmail && validPassword) ? false : true }
+      onPress = { () => signIn( email, password ) }
+      >
           <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
 
