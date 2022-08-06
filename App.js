@@ -74,31 +74,36 @@ const authObj = getAuth()
       })
   }
 
-  const signin = ( v)=> {
+  const signin = ( email, password)=> {
     
     signInWithEmailAndPassword(authObj, email, password)
     .then((userCredential) => setUser (userCredential.user))
     .catch((error) => console.log(error) )
     }
   
+    // const signout = () => {
+    //   signOut( authObj )
+    //   .then( () => {
+    //     // sign out successful
+    //   } )
+    //   .catch( () => {
+    //     // sign out errors
+    //   } )
+    // }
 
 
     const signout = () => {
       signOut( authObj )
-      .then( () => {
-        // sign out successful
-      } )
-      .catch( () => {
-        // sign out errors
-      } )
+      .then( () => setUser(null))
+      .catch( (error) => console.log(error) )
     }
       
    
 // const addData = async ( FScollection, data ) => {
-  //   // add data to a collection with FS generated id
-  //   const ref = await addDoc( collection(db,FScollection), data )
-  //   console.log( ref.id )
-  // }
+//   // add data to a collection with FS generated id
+//   const ref = await addDoc( collection(db,FScollection), data )
+//   console.log( ref.id )
+// }
 
 
 // Adding data to firestore
@@ -148,9 +153,6 @@ const addData = async(FSCollection) => {
 
       {/* headerRight: ( props ) => <SignoutButton {...props} signout={signout} /> */}
 
-
-
-
         {/* <Stack.Screen name="Home" options={{
           headerTitle: "App Home",
           headerRight: ( props ) => <SignoutButton {...props}  signout ={signout}/>
@@ -159,9 +161,7 @@ const addData = async(FSCollection) => {
         </Stack.Screen> */}
 
       <Stack.Screen name="Edit" component={EditScreen} options={{ title: 'Edit Task' }} />
-      
-      
-      
+       
     </Stack.Navigator>
   </NavigationContainer>
 );

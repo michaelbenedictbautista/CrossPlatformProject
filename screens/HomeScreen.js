@@ -24,7 +24,7 @@ export function HomeScreen( props ) {
 
   useEffect( () => {
     if( !props.auth ) {
-      navigation.reset( { index: 0, routes: [ {name: "Signup"} ]} )
+      navigation.reset( { index: 0, routes: [ {name: "Signin"} ]} )
     }  
   }, [props.auth] )
 
