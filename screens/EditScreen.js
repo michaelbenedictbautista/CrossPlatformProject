@@ -4,12 +4,9 @@ import { useState, useEffect} from 'react'
 import { StyleSheet, Text, View,Image,TouchableOpacity,TextInput,ScrollView,SafeAreaView } from 'react-native';
 
 
-export function EditScreen({navigation}) {
+export function EditScreen() {
   
-  const [currentDate,setcurrentDate]= useState('')
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-  const [date, setDate] = useState('');
+  
 
 useEffect(() => {
  
@@ -107,19 +104,7 @@ return (
 
    </View> 
 
-   <View style={{
-          alignItems: 'center',
-          marginTop: 20
-        }}>
-     <TouchableOpacity style ={styles.qrCodeButton}>
-       <Text style={{
-              color: '#FFF'
-            }}>Save and generate code
-       </Text>
-
-     </TouchableOpacity>
-   </View>  
-
+  
    <TouchableOpacity onPress={ () => navigation.navigate('Signup')}>
         <Text>Go to Sign up</Text>
     </TouchableOpacity>

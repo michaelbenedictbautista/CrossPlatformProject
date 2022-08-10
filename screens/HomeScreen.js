@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -22,11 +22,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export function HomeScreen( props ) {
   const navigation = useNavigation();
 
-  useEffect( () => {
-    if( !props.auth ) {
-      navigation.reset( { index: 0, routes: [ {name: "Signin"} ]} )
-    }  
-  }, [props.auth] )
+  // useEffect( () => {
+  //   if( !props.auth ) {
+  //     navigation.reset( { index: 0, routes: [ {name: "Signin"} ]} )
+  //   }  
+  // }, [props.auth] )
 
 
 
@@ -60,10 +60,10 @@ export function HomeScreen( props ) {
   const [ markedItem, setMarkedItem ] = useState([])
 
   // using reference to implement the clear() method
-  const txtInput = useRef()
+  // const txtInput = useRef()
 
   // Set input to empty string as a default state
-  const [input, setInput] = useState('')
+  // const [input, setInput] = useState('')
 
   // Function definition and declaration for saving and loading data from local storage
   const saveData = () => {
@@ -125,8 +125,7 @@ export function HomeScreen( props ) {
 
   /*Function declaration and definition to add input value to the upListData
   adding item to our upcoming list data*/
-  const addItem = () => {
-
+  const addItem = (input) => {
     // We use Timestamp to generate unique ID
     let newId = new Date().getTime()
     let newDate = new Date().getDate()
@@ -136,7 +135,7 @@ export function HomeScreen( props ) {
     let newItem = {id: newId, name: input, date: fullDate, status: false}
     let newList = upListData.concat( newItem )
     setUpListData(newList)
-    txtInput.current.clear() // clear textbox after hitting the add button
+    // txtInput.current.clear() // clear textbox after hitting the add button
   }
 
   // Function declaration and definition to delete task from upListData and compListData
@@ -156,6 +155,41 @@ export function HomeScreen( props ) {
       }
     })
     setCompListData( newListCompleted )
+  }
+
+  const editItem=(itemId) => {
+    const newList = upListData.filter( (item) => {
+        return item.id === itemId 
+    })
+    const newCompList = compListData.filter( (item) => {
+      return item.id === itemId 
+    })
+
+    let isComp=newCompList.length>0
+
+    navigation.push("Edit",{
+      value:isComp?newCompList[0].name:newList[0].name,
+      onPressSave:(value)=>{
+      //  addItem(value), props.add(), Init()
+      if(isComp){
+      const newList=  compListData.map(item=>{
+          if(item.id === itemId ){
+            return {...item,name:value}
+          }
+          return item
+        })
+        setCompListData(newList)
+      }else{
+        const newList=  upListData.map(item=>{
+          if(item.id === itemId ){
+            return {...item,name:value}
+          }
+          return item
+        })
+        setUpListData(newList)
+      }
+      }
+    })
   }
 
 
@@ -227,16 +261,15 @@ const shareQRCode = () => {
   // Function to render list of items in the array
   const renderItem = ({item}) => (
     // rendering our list of items(tasks)
-    <ListItem item={item} remove={ deleteItem } update= {updateStatus} generateQRCode = {generateCode} /> 
+    <ListItem item={item} remove={ deleteItem } update= {updateStatus} generateQRCode = {generateCode} edit={editItem}/> 
   )
 
    // initialise function to set variable to desired useState.
-   const Init = () => {
-    setInput('')
+   const Init = useCallback(()=>{
+    // setInput('')
     setQrvalue('')
     setQrValueDate('')
-    
-  }
+   },[])
 
   
     
@@ -282,7 +315,7 @@ const shareQRCode = () => {
       </View>
 
       <SafeAreaView>
-      <View style = {styles.header}>
+      {/* <View style = {styles.header}>
         <TextInput  style = {styles.input} 
           placeholder ='Enter task here...' 
           onChangeText={ (value) => setInput(value) }
@@ -298,6 +331,18 @@ const shareQRCode = () => {
           Add task
         </Text>
         </Icon.Button>
+      </TouchableOpacity> */}
+
+      <TouchableOpacity style={{alignItems:'center',justifyContent:'center',height:50,backgroundColor:'black'}} onPress={()=>{
+        navigation.push("Add",{
+          onPressAdd:(value)=>{
+           addItem(value), props.add(), Init()
+          }
+        })
+      }}>   
+        <Text style={styles.buttonText}>
+          Add task
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.upcomingScreenContainer}>  

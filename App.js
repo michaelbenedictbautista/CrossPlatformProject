@@ -12,7 +12,9 @@ import { HomeScreen } from './screens/HomeScreen';
 import { SigninScreen } from './screens/SigninScreen';
 import { SignupScreen } from './screens/SignupScreen';
 import { EditScreen } from './screens/EditScreen';
+import { NewEditScreen } from './screens/NewEditScreen';
 import { SignoutButton } from './components/SignoutButton';
+import { AddScreen } from './screens/AddScreen';
 
 
 // Firebase config
@@ -160,8 +162,12 @@ const addData = async(FSCollection) => {
           { (props) => <HomeScreen {...props} auth={user} add={addData}/> }
         </Stack.Screen> */}
 
-      <Stack.Screen name="Edit" component={EditScreen} options={{ title: 'Edit Task' }} />
-       
+
+      <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} />
+
+   
+
+      <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} />
     </Stack.Navigator>
   </NavigationContainer>
 );

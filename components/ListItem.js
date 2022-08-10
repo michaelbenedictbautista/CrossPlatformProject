@@ -20,6 +20,10 @@ export function ListItem ( props ) {
         <Icon name="qrcode" style={ styles.generateIcon }/>
       </TouchableOpacity>
 
+      <TouchableOpacity style={ styles.edit} onPress={ () => props.edit(props.item.id) }>
+        <Icon name="edit" style={ styles.bookmarkIcon } />
+      </TouchableOpacity>
+
     </View>
 
     )
@@ -62,6 +66,12 @@ const styles = StyleSheet.create({
   generateTouchableOp: {
     position: 'absolute',
     right: 80,
+    justifyContent: 'center',
+  },
+
+  edit:{
+    position: 'absolute',
+    right: 110,
     justifyContent: 'center',
   },
 
