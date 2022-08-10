@@ -1,5 +1,5 @@
 // import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View, Image} from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import { useState, useEffect } from 'react';
 
 
@@ -22,11 +22,13 @@ import { firebaseConfig } from './config/config'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, collection, addDoc, } from 'firebase/firestore'
 
-import { getAuth, 
-        createUserWithEmailAndPassword, 
-        signInWithEmailAndPassword, 
-        signOut, 
-        onAuthStateChanged} from 'firebase/auth'
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth'
 
 // Initialise the firebase app abd save reference
 const FBapp = initializeApp(firebaseConfig)
@@ -35,7 +37,7 @@ const FBapp = initializeApp(firebaseConfig)
 const db = getFirestore(FBapp)
 
 // Customised logo
-function LogoTitle() {
+const LogoTitle = () => {
   return (
     <View style={styles.logoContainer}>
       <Image
@@ -44,7 +46,7 @@ function LogoTitle() {
       />
       {/* <Text style = {styles.titleText}>My Signup</Text> */}
     </View>
-    
+
   );
 }
 
@@ -52,12 +54,12 @@ const Stack = createNativeStackNavigator()
 
 export default function App() {
 
-//const [auth, setAuth] =  useState(false)
-const [user,setUser] = useState()
+  //const [auth, setAuth] =  useState(false)
+  const [user, setUser] = useState()
 
-const authObj = getAuth()
+  const authObj = getAuth()
   onAuthStateChanged(authObj, (user) => {
-    if (user ) {
+    if (user) {
       setUser(user)
     }
     else {
@@ -66,7 +68,7 @@ const authObj = getAuth()
   })
 
   const register = (email, password) => {
-    
+
     createUserWithEmailAndPassword(authObj, email, password)
       .then((userCredential) => {
         setUser(userCredential.user)
@@ -76,52 +78,44 @@ const authObj = getAuth()
       })
   }
 
-  const signin = ( email, password)=> {
-    
+  const signin = (email, password) => {
+
     signInWithEmailAndPassword(authObj, email, password)
-    .then((userCredential) => setUser (userCredential.user))
-    .catch((error) => console.log(error) )
-    }
-  
-    // const signout = () => {
-    //   signOut( authObj )
-    //   .then( () => {
-    //     // sign out successful
-    //   } )
-    //   .catch( () => {
-    //     // sign out errors
-    //   } )
-    // }
+      .then((userCredential) => setUser(userCredential.user))
+      .catch((error) => console.log(error))
+  }
+
+  const signout = () => {
+    signOut(authObj)
+      .then(() => setUser(null))
+      .catch((error) => console.log(error))
+  }
 
 
-    const signout = () => {
-      signOut( authObj )
-      .then( () => setUser(null))
-      .catch( (error) => console.log(error) )
-    }
-      
-   
-// const addData = async ( FScollection, data ) => {
-//   // add data to a collection with FS generated id
-//   const ref = await addDoc( collection(db,FScollection), data )
-//   console.log( ref.id )
-// }
+  // const addData = async ( FScollection, data ) => {
+  //   // add data to a collection with FS generated id
+  //   const ref = await addDoc( collection(db,FScollection), data )
+  //   console.log( ref.id )
+  // }
 
 
-// Adding data to firestore
-const addData = async(FSCollection) => {
-    const ref = await addDoc(collection(db, "users"),  {
-     name: "Mimi",
-     photoImg: "MimiImg"
+  // Adding data to firestore
+  const addData = async (FSCollection) => {
+    let taskTitle = ('');
+    let taskDate = ('');
+
+    const ref = await addDoc(collection(db, "users"), {
+      Title: (taskTitle),
+      Date: (taskDate)
     });
 
     console.log(ref.id)
-}
+  }
 
 
   return (
     <NavigationContainer>
-    <Stack.Navigator screenOptions={{
+      <Stack.Navigator screenOptions={{
         headerStyle: {
           backgroundColor: '#94D1FA',
         },
@@ -130,47 +124,34 @@ const addData = async(FSCollection) => {
           fontWeight: 'bold',
         },
       }}>
-       {/* // Passing addtional props we  */}
-      {/* <Stack.Screen name="Signup" component={SignupScreen} options={{  headerTitle: (props) => <LogoTitle {...props}/> }} /> */}
-      
 
-      <Stack.Screen name="Signup"  options={{  headerTitle: (props) => <LogoTitle {...props}/> }}>
-          { ( props ) => <SignupScreen {...props} signup={register} auth={user}/> }
+        <Stack.Screen name="Signup" options={{ headerTitle: (props) => <LogoTitle {...props} /> }}>
+          {(props) => <SignupScreen {...props} signup={register} auth={user} />}
         </Stack.Screen>
-      
-      
-      {/* <Stack.Screen name="Signup">
-          { ( props) => <SignupScreen {...props} signup={register} auth={user}/> }
-        </Stack.Screen> */}
-      
-      <Stack.Screen name="Signin" options={{ title: 'My Signin' }} >
-        { ( props ) => <SigninScreen {...props} signin={signin} auth={user}/> }
-      </Stack.Screen>
-      
-      {/* <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'My Home' }} /> */}
-      <Stack.Screen name="Home" options={{headerTitle: (props) => <LogoTitle {...props} />, headerRight: ( props ) => <SignoutButton {...props} signout={signout}/>}}
-      >
-        { (props) => <HomeScreen {...props} auth={user} add={addData} />}
-      </Stack.Screen>
-
-      {/* headerRight: ( props ) => <SignoutButton {...props} signout={signout} /> */}
-
-        {/* <Stack.Screen name="Home" options={{
-          headerTitle: "App Home",
-          headerRight: ( props ) => <SignoutButton {...props}  signout ={signout}/>
-        }}>
-          { (props) => <HomeScreen {...props} auth={user} add={addData}/> }
-        </Stack.Screen> */}
 
 
-      <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} />
+        <Stack.Screen name="Signin" options={{ title: 'My Signin' }} >
+          {(props) => <SigninScreen {...props} signin={signin} auth={user} />}
+        </Stack.Screen>
 
-   
+        {/* <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'My Home' }} /> */}
+        <Stack.Screen name="Home" options={{
+          headerTitle: (props) => <LogoTitle {...props} />,
+          headerRight: (props) => <SignoutButton {...props} signout={signout} />,
 
-      <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} />
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+        }}
+        >
+          {/* {(props) => <HomeScreen {...props} auth={user} add={addData} />} */}
+          {(props) => <HomeScreen {...props} auth={user}/>}
+        </Stack.Screen>
+
+        <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} />
+
+        <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} />
+
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -178,14 +159,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'flex-start',
-    marginBottom:1,
+    justifyContent: 'flex-start',
+    marginBottom: 1,
     padding: 1,
-    
+
   },
 
   logoImage: {
-    width: 40, 
+    width: 40,
     height: 40,
     marginRight: 5,
     resizeMode: 'contain',
