@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useRoute } from '@react-navigation/native'
 
 import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
@@ -21,7 +22,8 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 
-export function HomeScreen(props) {
+export function HomeScreen (props) {
+
   const navigation = useNavigation();
 
   // navigate user to Sigin screen after Sign out.
@@ -30,6 +32,23 @@ export function HomeScreen(props) {
       navigation.reset({ index: 0, routes: [{ name: "Signin" }] })
     }
   }, [props.auth])
+
+  useEffect( () => {
+    //console.log( props.data )
+  }, [props.data])
+
+  // Get data from firestore by using the getData function
+  const displayData = ( path) => {
+    props.getDataFromFirestore( path )
+  }
+
+  const displayAllObjectItems = () => {
+    (displayData(`users/${props.auth.uid}/items/`))
+
+    console.log(props.data)
+    // const {title} = props.data;
+    // console.log({title})
+  }
 
   // Local storage
   const storage = new Storage({
@@ -55,9 +74,10 @@ export function HomeScreen(props) {
   const [starting, setStarting] = useState(true)
   const [qrvalue, setQrvalue] = useState('');
   const [qrValueDate, setQrValueDate] = useState('');
+  const [qrValueDescription, setQrValueDescription] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-
+  
   // getters and setters for task done
   const [markedItem, setMarkedItem] = useState([])
 
@@ -125,22 +145,41 @@ export function HomeScreen(props) {
   })
 
 
-  /*Function declaration and definition to add input value to the upListData
+  // const route = useRoute()
+  // const { id, title } = route.params
+  
+
+
+  // /*Function declaration and definition to add input value to the upListData
+  // adding item to our upcoming list data*/
+  // const addItem = (input) => {
+  //   // We use Timestamp to generate unique ID
+  //   let newId = new Date().getTime()
+  //   let newDate = new Date().getDate()
+  //   let newMonth = new Date().getMonth() + 1;
+  //   let newYear = new Date().getFullYear();
+  //   let fullDate = newDate + '/' + newMonth + '/' + newYear
+  //   let newItem = { id: newId, name: input, date: fullDate, status: false }
+  //   let newList = upListData.concat(newItem)
+  //   setUpListData(newList)
+  //   // txtInput.current.clear() // clear textbox after hitting the add button
+  // }
+
+ /*Function declaration and definition to add input value to the upListData
   adding item to our upcoming list data*/
-  const addItem = (input) => {
+  const addItem = (input, input2) => {
     // We use Timestamp to generate unique ID
     let newId = new Date().getTime()
     let newDate = new Date().getDate()
     let newMonth = new Date().getMonth() + 1;
     let newYear = new Date().getFullYear();
     let fullDate = newDate + '/' + newMonth + '/' + newYear
-    let newItem = { id: newId, name: input, date: fullDate, status: false }
+    let newItem = { id: newId, title: input, description: input2, date: fullDate, status: false }
     let newList = upListData.concat(newItem)
     setUpListData(newList)
     // txtInput.current.clear() // clear textbox after hitting the add button
-
-    
   }
+
 
   // Function declaration and definition to delete task from upListData and compListData
   const deleteItem = (itemId) => {
@@ -171,15 +210,20 @@ export function HomeScreen(props) {
     })
 
     let isComp = newCompList.length > 0
-
+    
     navigation.push("Edit", {
-      value: isComp ? newCompList[0].name : newList[0].name,
-      onPressSave: (value) => {
+      value: isComp ? newCompList[0].title: newList[0].title,
+
+
+      //value: isComp ? [newCompList[0].title newCompList[0].description]: newList[0].title,
+     
+      
+      onPressSave: (value, value2) => {
         //  addItem(value), props.add(), Init()
-        if (isComp) {
+        if (isComp && isComp2) {
           const newList = compListData.map(item => {
             if (item.id === itemId) {
-              return { ...item, name: value }
+              return { ...item, title: value, description: value2}
             }
             return item
           })
@@ -187,7 +231,7 @@ export function HomeScreen(props) {
         } else {
           const newList = upListData.map(item => {
             if (item.id === itemId) {
-              return { ...item, name: value }
+              return { ...item, title: value, description: value2}
             }
             return item
           })
@@ -197,13 +241,13 @@ export function HomeScreen(props) {
     })
   }
 
-
   // Function declaration and definition to mark task as done
   const updateStatus = (itemId) => {
     let newUpdatedItem = ([])
     upListData.map((item) => {
       if (item.id === itemId) {
-        return newUpdatedItem = { id: item.id, name: item.name, date: item.fullDate, status: true }
+
+        return newUpdatedItem = { id: item.id, title: item.title, description: item.description, date: item.fullDate, status: true }
       }
       else {
         return item
@@ -233,22 +277,16 @@ export function HomeScreen(props) {
     let newGeneratedItem = ([])
     upListData.map((item) => {
       if (item.id === itemId) {
-        return newGeneratedItem = { id: item.id, name: item.name, date: item.date, status: true }
+        return newGeneratedItem = { id: item.id, title: item.title, description: item.description, date: item.date, status: true }
       }
       else {
         return item
       }
     })
-    setQrvalue(newGeneratedItem.name)
+    setQrvalue(newGeneratedItem.title)
     setQrValueDate(newGeneratedItem.date)
-
+    setQrValueDescription(newGeneratedItem.description)    
   }
-
-  // const indentSpacing =()=> {
-  //   let indent = concat( newItem )
-  //   let newList = upListData.concat( newItem )
-  // }
-
 
   // Function to share QR code
   let myQRCode = useRef();
@@ -267,7 +305,12 @@ export function HomeScreen(props) {
   // Function to render list of items in the array
   const renderItem = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem item={item} remove={deleteItem} update={updateStatus} generateQRCode={generateCode} edit={editItem} />
+    <ListItem item={item} remove={deleteItem} 
+              update={updateStatus} generateQRCode={generateCode} 
+              edit={editItem}
+              // clickHandler={props.data}
+              />
+              
   )
 
   // initialise function to set variable to desired useState.
@@ -275,9 +318,15 @@ export function HomeScreen(props) {
     // setInput('')
     setQrvalue('')
     setQrValueDate('')
+    setQrValueDescription('')
   }, [])
 
-
+  // // initialise function to set variable to desired useState.
+  // const Init = () => {
+  //   setQrvalue('')
+  //   setQrValueDate('')
+  //   setQrValueDescription('')
+  //  }
 
   return (
 
@@ -308,7 +357,7 @@ export function HomeScreen(props) {
 
               //QR code value
               // value={qrvalue ? qrvalue : 'NA'}
-              value={[qrvalue, qrValueDate]}
+              value={[qrvalue,'\n', qrValueDescription ,'\n', qrValueDate]}
               //size of QR Code
               size={150}
               //Color of the QR Code (Optional)
@@ -334,9 +383,11 @@ export function HomeScreen(props) {
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
+              
             >
               <Text style={styles.textStyle}>close</Text>
             </Pressable>
+
           </View>
         </View>
       </Modal>
@@ -361,19 +412,19 @@ export function HomeScreen(props) {
           </Icon.Button>
         </TouchableOpacity> */}
 
-        <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black' }}
+        {/* <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black' }}
           onPress={() => {
             navigation.push("Add", {
-              onPressAdd:(value)=>{
+              onPressAdd:(value, value2)=>{
                 // addItem(value), props.add(), Init()
-                 addItem(value), Init()
+                 addItem(value, value2), Init()
               }
             })
           }}>
           <Text style={styles.buttonText}>
             Add task
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.upcomingScreenContainer}>
           <Text style={styles.upcomingScreen}> Upcoming task </Text>
@@ -390,7 +441,7 @@ export function HomeScreen(props) {
         <View style={styles.completedScreenContainer}>
           <Text style={styles.completedScreen}> Completed task </Text>
           <Text style={{ fontSize: 14, fontWeight: 'bold' }}> Recently completed task </Text>
-          <Text style={{ fontSize: 10 }}> {markedItem.name} </Text>
+          <Text style={{ fontSize: 10 }}> {markedItem.title} </Text>
         </View>
 
         <FlatList
@@ -401,6 +452,15 @@ export function HomeScreen(props) {
           ListEmptyComponent={ListEmpty} // For no items in the list
           ListFooterComponent={<ListFooter text="This is the end of task list" />}
         />
+
+          < ListSeparator></ListSeparator>
+
+        <TouchableOpacity  >
+          <Text style={styles.displayAllObjectItemsText} onPress={ () => displayAllObjectItems() }>
+            Click to display all Items in console!
+          </Text>
+        </TouchableOpacity>
+
 
       </ScrollView>
 
@@ -420,7 +480,21 @@ export function HomeScreen(props) {
 
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navFormat}>
+          <TouchableOpacity style={styles.navFormat}
+           onPress={() => {
+            navigation.push("Add", {
+              onPressAdd:(value, value2)=>{
+                // addItem(value), props.add(), Init()
+                 addItem(value, value2), Init()
+              }
+            })
+          }}
+          
+          
+          
+          
+  
+          >
             <Image style={styles.navAddIcon}
               source={require("../images/addTask.png")}
             />
@@ -599,11 +673,12 @@ const styles = StyleSheet.create({
   // },
   navAddIcon: {
     alignSelf: 'center',
+  },
+
+  displayAllObjectItemsText: {
+    textAlign: 'center',
+    margin : 10,
+    
   }
-
-
-
-
-
 
 })

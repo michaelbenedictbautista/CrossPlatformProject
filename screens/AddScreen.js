@@ -17,49 +17,50 @@ const FBapp = initializeApp(firebaseConfig)
 const db = getFirestore(FBapp)
 
 
-
-
 export function AddScreen(props) {
 
-  
+  const [ input, setInput ] = useState('')
+  const [ input2, setInput2 ] = useState('')
+  //const [ date, setDate ] = useState()
 
-  const [input, setInput] = useState('')
+// // Adding data to firestore
+// const addDataToFirestore = async (FSCollection) => {
   
-  const [date, setDate] = useState('')
-  const [description, setDescription] = useState('')
-
+//   let taskTitle = (input)
+//   let newDate = new Date().getDate()
+//   let newMonth = new Date().getMonth() + 1;
+//   let newYear = new Date().getFullYear();
+//   let fullDate = newDate + '/' + newMonth + '/' + newYear
+//   let date = fullDate
+ 
+//   setDate(fullDate)
   
-
-// Adding data to firestore
-const addDataToFirestore = async (FSCollection) => {
-  
-  let taskTitle = (input)
+const submitData = ( path, taskTitle, taskDescription) => {
   let newDate = new Date().getDate()
   let newMonth = new Date().getMonth() + 1;
   let newYear = new Date().getFullYear();
   let fullDate = newDate + '/' + newMonth + '/' + newYear
-  let date = fullDate
- 
-  setDate(fullDate)
-  
-  // let description = (input)
-
-  const ref = await addDoc(collection(db, "users"), {
-    title: (taskTitle),
-    date: (date),
-    description: (description),
-    // description: (description),
-
-  });
-
-  console.log(ref.id)
+  const dataObj = {title: taskTitle,  description: taskDescription, date: fullDate }
+  props.addDataToFirestore( path, dataObj )
 }
 
+useEffect( () => {
+  if( !props.auth ) {
+    navigation.reset( { index: 0, routes: [ {name: "Signin"} ]} )
+  }  
+}, [props.auth] )
+
+useEffect( () => {
+  //console.log( props.data )
+}, [props.data])
+
+const clickHandler = (data) => {
+  navigation.navigate('Home', data )
+}
 
 const navigation = useNavigation();
 const {onPressAdd ,} =props.route.params
  
-
   return <SafeAreaView>
     <View style={styles.header}>
       <TextInput style={styles.input}
@@ -73,8 +74,8 @@ const {onPressAdd ,} =props.route.params
     <View style={styles.header}>
       <TextInput style={styles.input}
         placeholder='Enter description here...'
-        onChangeText={(description) => {
-          setDescription(description)
+        onChangeText={(value2) => {
+          setInput2(value2)
         }}
       />
     </View>
@@ -84,8 +85,9 @@ const {onPressAdd ,} =props.route.params
       <Icon.Button name="pluscircleo" style={(input.length < 3) ? styles.buttonDisabled : styles.button}
         disabled={(input.length < 3) ? true : false}
         onPress={() => {
-          onPressAdd(input), addDataToFirestore(),
-          navigation.goBack()
+          onPressAdd(input, input2), submitData(`users/${props.auth.uid}/items`,input, input2),
+          clickHandler(props.data)
+          // navigation.goBack()
         }}>
         <Text style={(input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
           Add task

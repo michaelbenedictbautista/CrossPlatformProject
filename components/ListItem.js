@@ -5,7 +5,8 @@ export function ListItem ( props ) {
     return (
     <View style={ styles.item }>
       
-      <Text style={ styles.itemNameText}>{ props.item.name }</Text>
+      <Text style={ styles.itemNameText}>{ props.item.title }</Text>
+      <Text style={ styles.itemNameText}>{ props.item.description }</Text>
       <Text style={ styles.itemDateText}>{ props.item.date }</Text>
       
       <TouchableOpacity style={ styles.removeTouchableOp } onPress={ () => props.remove(props.item.id) }>
@@ -23,6 +24,16 @@ export function ListItem ( props ) {
       <TouchableOpacity style={ styles.edit} onPress={ () => props.edit(props.item.id) }>
         <Icon name="edit" style={ styles.bookmarkIcon } />
       </TouchableOpacity>
+
+      {/* <TouchableOpacity style={ styles.display} onPress={ () => props.display() }>
+        <Icon name="check" style={ styles.bookmarkIcon } />
+      </TouchableOpacity> */}
+      {/* <View >
+            <Text onPress={ () => clickHandler(item) }>
+              { props.item.id }
+            </Text>
+      </View>  */}
+
 
     </View>
 
@@ -74,6 +85,15 @@ const styles = StyleSheet.create({
     right: 110,
     justifyContent: 'center',
   },
+
+
+  display:{
+    position: 'absolute',
+    right: 150,
+    justifyContent: 'center',
+  },
+
+
 
   trashIcon: {
     fontSize:20,

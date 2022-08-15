@@ -20,7 +20,13 @@ import { AddScreen } from './screens/AddScreen';
 // Firebase config
 import { firebaseConfig } from './config/config'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, } from 'firebase/firestore'
+import { getFirestore, 
+        collection, 
+        addDoc, 
+        updateDoc, 
+        query, 
+        onSnapshot 
+      } from 'firebase/firestore'
 
 import {
   getAuth,
@@ -54,13 +60,20 @@ const Stack = createNativeStackNavigator()
 
 export default function App() {
 
-  //const [auth, setAuth] =  useState(false)
+  // Store state of user
   const [user, setUser] = useState()
+  
+  // Store state of data
+  const [appData, setAppData] =useState([])
 
+  // Verify user
   const authObj = getAuth()
   onAuthStateChanged(authObj, (user) => {
     if (user) {
       setUser(user)
+      if (!appData) {
+        getData(`users/${user.uid}/items`)
+      }
     }
     else {
       setUser(null)
@@ -92,24 +105,33 @@ export default function App() {
   }
 
 
-  // const addData = async ( FScollection, data ) => {
-  //   // add data to a collection with FS generated id
-  //   const ref = await addDoc( collection(db,FScollection), data )
-  //   console.log( ref.id )
-  // }
+  // Adding data/document to firestore
+  const addDataToFirestore = async ( FScollection, data ) => {
+    // add data to a collection with FS generated id
+    const ref = await addDoc( collection(db,FScollection), data )
+    console.log( ref.id )
+  }
 
-
-  // Adding data to firestore
-  const addData = async (FSCollection) => {
-    let taskTitle = ('');
-    let taskDate = ('');
-
-    const ref = await addDoc(collection(db, "users"), {
-      Title: (taskTitle),
-      Date: (taskDate)
-    });
-
-    console.log(ref.id)
+  // Get data/document from firestore
+  const getDataFromFirestore = ( FScollection ) => {
+    const FSquery = query( collection( db, FScollection ) )
+    const unsubscribe = onSnapshot( FSquery, ( querySnapshot ) => {
+      let FSdata = []
+      querySnapshot.forEach( (doc) => {
+        let item = {}
+        item = doc.data()
+        item.id = doc.id
+        FSdata.push( item )
+      })
+      setAppData( FSdata )
+    })
+  }
+ 
+  const editDataToFirestore = async ( FScollection, data, ) => {
+    // edit data to a collection with FS generated id
+    const ref = await updateDoc( collection(db,FScollection), data)
+    
+    console.log( ref.id )
   }
 
 
@@ -142,12 +164,22 @@ export default function App() {
         }}
         >
           {/* {(props) => <HomeScreen {...props} auth={user} add={addData} />} */}
-          {(props) => <HomeScreen {...props} auth={user}/>}
+          {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} />}
         </Stack.Screen>
 
-        <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} />
+       
 
-        <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} />
+        {/* <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} /> */}
+        <Stack.Screen name="Add" options={{ title: 'Add Task' }} >
+        {(props) => <AddScreen {...props}  auth={user} data={appData} addDataToFirestore={addDataToFirestore} />}
+        </Stack.Screen>
+
+
+         {/* <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} /> */}
+        <Stack.Screen name="Edit" options={{ title: 'Edit Task' }} >
+        {(props) => <NewEditScreen {...props}  auth={user} data={appData} editDataToFirestore={editDataToFirestore} />}
+        </Stack.Screen>
+
 
       </Stack.Navigator>
     </NavigationContainer>
