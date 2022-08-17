@@ -97,7 +97,7 @@ useEffect( () => {
       <TextInput style = {styles.input}
         secureTextEntry={true}
         onChangeText={ (value) => setPassword (value) }
-        placeholder="password"
+        placeholder="****"
         placeholderTextColor = "darkgray" 
         />
 
@@ -121,6 +121,18 @@ useEffect( () => {
       </Text>
     </View>
 
+    <View style={styles.signInWithContainer}>
+      <Text>Or Sign in with------------------------------------</Text>
+    </View>
+
+    <View style={ styles.buttonContainer}>
+      <TouchableOpacity style={ styles.buttonGoogle }
+        onPress = { () => {Linking.openURL ('https://accounts.google.com/signin/v2/identifier?hl=en-GB&continue=https%3A%2F%2Fwww.google.com%3Fhl%3Den-GB&ec=GAlA8wE&flowName=GlifWebSignIn&flowEntry=AddSession')}}     
+        >             
+          <Text style={styles.buttonGoogleText}>Continue with Google</Text>
+      </TouchableOpacity>
+    </View>
+
     </KeyboardAvoidingView> 
   )
 }
@@ -128,7 +140,6 @@ useEffect( () => {
 const styles = StyleSheet.create( {
 
   signInView: {
-    
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -150,7 +161,7 @@ const styles = StyleSheet.create( {
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5,///////////
+    marginVertical: 5,
   },
 
   input: {
@@ -188,15 +199,15 @@ const styles = StyleSheet.create( {
   },
 
   button: { 
-    backgroundColor: 'dodgerblue',
-    borderRadius: 5,
+    backgroundColor: '#313cdf',
+    borderRadius: 300,
     alignItems: 'center',
     padding: 10,
   },
 
   buttonDisabled: {
     backgroundColor: 'gray',
-    borderRadius: 5,
+    borderRadius: 300,
     alignItems: 'center',
     padding: 10,
   },
@@ -212,6 +223,30 @@ const styles = StyleSheet.create( {
   },
   placeholder: {
     fontSize: 20,
-  }
+  },
+  
+  signInWithContainer: {
+    width: '100%',
+    padding: 10,
+    alignItems: 'center',
+    marginVertical: 15,
+  },
+
+  buttonGoogle: {
+    borderRadius: 300,//
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'gray',
+    borderWidth: 0.5,  
+  },
+
+  buttonGoogleText: {
+    fontWeight: 'bold',
+    color: 'darkgray',
+  },
+
+  buttonGoogleContainer: {
+   flex: 1,
+  },
 
 } ) 

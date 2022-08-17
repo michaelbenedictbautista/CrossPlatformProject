@@ -3,10 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, SafeAreaView } from 'react-native';
 
-
 export function EditScreen() {
-
-
 
   useEffect(() => {
 

@@ -1,9 +1,10 @@
 import React, { useCallback, useState,useEffect } from 'react';
-import { SafeAreaView ,StyleSheet,View,TextInput,TouchableOpacity,Text} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 
+import { SafeAreaView ,StyleSheet,View,TextInput,TouchableOpacity,Text} from 'react-native';
 
+import Icon from 'react-native-vector-icons/AntDesign'
+import { LinearGradient } from 'expo-linear-gradient'
 
 export function NewEditScreen( props ) {
     const navigation = useNavigation();
@@ -21,31 +22,36 @@ export function NewEditScreen( props ) {
       props.editDataToFirestore( path, dataObj )
     }
 
-    return <SafeAreaView>
+    return <SafeAreaView style={styles.safeAreaViewContainer}>
+      <LinearGradient
+        style={styles.box}
+        colors={['blue', 'cyan']}
+        start={{ x: 1, y: 1 }}
+        end={{ x: 0, y: 0 }}
+      />
 
       <View style = {styles.header}>
-        <TextInput  style = {styles.input} 
-          placeholder ='Enter task here...' 
-          onChangeText={ (value) => {
-            setInput(value)
-            // onValueChange(value)
-          } }
-          value={input}
-        />
+        <Text style = {styles.textInputLabel}>Title</Text>
+          <TextInput  style = {styles.input}
+            onChangeText={ (value) => {
+              setInput(value)
+            } }
+            value={input}
+          />
       </View>
 
       <View style = {styles.header}>
+        <Text style = {styles.textInputLabel}>Description</Text>
           <TextInput  style = {styles.input} 
-            placeholder ='Enter description here...' 
+            multiline={true}         
             onChangeText={ (value2) => {
               setInput2(value2)
-              // onValueChange(value)
             } }
             value={input2}
           />
       </View>
 
-      <TouchableOpacity style={{marginTop:10}}>   
+      {/* <TouchableOpacity style={{marginTop:10}}>   
         <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
           disabled = { (input.length < 3) ? true : false }
           onPress={()=>{
@@ -57,72 +63,114 @@ export function NewEditScreen( props ) {
           Save task
         </Text>
         </Icon.Button>
+      </TouchableOpacity> */}
+        
+      <TouchableOpacity style={(input.length < 3 || input2.length < 3) ? styles.saveButtonDisabled : styles.saveButton}
+      disabled = { (input.length < 3 || input2.length < 3) ? true : false }
+      onPress={()=>{
+        // submitData(`users/${props.auth.uid}/items`,input, input2),
+        onPressSave(props.route.params.value,input, input2), submitEditedData(`users/${props.auth.uid}/items`,input, input2)
+        navigation.goBack()
+      }}>
+        <Icon style={(input.length < 3 || input2.length < 3) ? styles.saveButtonIconDisabled: styles.saveButtonIcon} name="save" />
+        <Text style={(input.length < 3 || input2.length < 3) ? styles.saveButtonTextStyleDisabled: styles.saveButtonTextStyle}>
+          Save
+        </Text>
       </TouchableOpacity>
+
     </SafeAreaView>
 }
 const styles = StyleSheet.create( {
+
+  safeAreaViewContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    
+    box: {
+      position: 'absolute',
+      width: '100%',
+      height: 800,
+      opacity: 0.8,
+    },
+
     input: {
-        padding: 5,
-        fontSize: 20,
-        backgroundColor: 'white',
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        flex: 1,
+        backgroundColor: '#B3E0F2',
+        borderRadius: 5,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        marginBottom: 15,
+        padding: 10,
+        fontSize: 12,
       },
     
       header: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        width: 300,
+        padding: 5,
+        marginBottom: 15,
       },
-    
-      buttonDisabled: {  
-        backgroundColor: 'gray',
-        color: 'gray',
-      
+
+      textInputLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginVertical: 5,  
       },
     
       button: {
-        backgroundColor: 'blue',
+        backgroundColor: '#313cdf',
       },
-    
-      buttonTextDisabled: {
-        fontSize: 20,
-        backgroundColor: 'transparent',
-      },
-    
-      buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'white',
-      },
-    
-      QrCodeContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 5,
-        marginTop: 5,
-      },
-    
-      shareButtonStyle: {
+
+      saveButton: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 5,
+        marginTop: 10,
+        marginBottom: 10,
         padding: 5,
         borderRadius: 300,
-        backgroundColor: 'cyan',
+        backgroundColor: '#313cdf',
+        width: 150,
+        borderWidth: 1,
+        borderColor: "white"
       },
-    
-      shareButtonIcon: {
-        
-        color:"white",
-        
+
+      saveButtonDisabled: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+        padding: 5,
+        borderRadius: 300,
+        backgroundColor: 'gray',
+        width: 150,
+        borderWidth: 1,
+        borderColor: "black"
       },
-    
-      shareButtonTextStyle: {
+
+      saveButtonTextStyle: {
         fontWeight: 'bold',
-        fontSize: 10,
+        fontSize: 15,
+        color: 'white',
+        padding: 5,     
+      },
+
+      saveButtonTextStyleDisabled: {
+        fontWeight: 'bold',
+        fontSize: 15,
+        color: 'black',
+        padding: 5, 
+      },
+    
+      saveButtonIcon: {     
+        color:"white",
+        fontSize: 20,    
+      },
+      
+      saveButtonIconDisabled: {     
+        color:"black",
+        fontSize: 20,        
       },
     
 })

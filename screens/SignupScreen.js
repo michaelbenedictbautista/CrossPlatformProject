@@ -132,7 +132,7 @@ const styles = StyleSheet.create( {
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 5,/////////
+    marginVertical: 5,
   },
 
   input: {
@@ -161,14 +161,14 @@ const styles = StyleSheet.create( {
   
   button: {
     backgroundColor: 'dodgerblue',
-    borderRadius: 5, 
+    borderRadius: 300, 
     alignItems: 'center',
     padding: 10,
   },
 
   buttonDisabled: {
     backgroundColor: 'gray',
-    borderRadius: 5,
+    borderRadius: 300,
     alignItems: 'center',
     padding: 10,
   },

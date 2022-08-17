@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRoute } from '@react-navigation/native'
 
-import { StyleSheet, Text, View, FlatList, TextInput } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TextInput, VirtualizedList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity, Share, Alert, Modal, Pressable, Image } from 'react-native'
 
@@ -296,7 +296,7 @@ export function HomeScreen (props) {
   let myQRCode = useRef();
   const shareQRCode = () => {
     myQRCode.toDataURL((dataURL) => {
-      console.log(dataURL);
+      //console.log(dataURL);
       let shareImageBase64 = {
         title: 'React Native',
         url: `data:image/png;base64,${dataURL}`,
@@ -325,12 +325,6 @@ export function HomeScreen (props) {
     setQrValueDescription('')
   }, [])
 
-  // // initialise function to set variable to desired useState.
-  // const Init = () => {
-  //   setQrvalue('')
-  //   setQrValueDate('')
-  //   setQrValueDescription('')
-  //  }
 
   return (
 
@@ -373,7 +367,7 @@ export function HomeScreen (props) {
               logoMargin={4}
               justifyContent='center'
             />
-            {/* Function button to share generated task */}
+            
             <TouchableOpacity
               style={styles.shareButtonStyle}
               onPress={shareQRCode}>
@@ -383,52 +377,20 @@ export function HomeScreen (props) {
               </Text>
             </TouchableOpacity>
 
-
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-              
+            <TouchableOpacity
+              // style={[styles.button, styles.buttonClose]}
+              style={styles.buttonClose}
+              onPress={() => setModalVisible(!modalVisible)}   
             >
-              <Text style={styles.textStyle}>close</Text>
-            </Pressable>
+              <Text style={styles.buttonCloseTextStyle}>close</Text>
+            </TouchableOpacity>
 
           </View>
         </View>
       </Modal>
 
-
       <ScrollView>
-        {/* <View style = {styles.header}>
-          <TextInput  style = {styles.input} 
-            placeholder ='Enter task here...' 
-            onChangeText={ (value) => setInput(value) }
-            ref = {txtInput}
-          />
-        </View>
-        <TouchableOpacity>   
-          <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
-            disabled = { (input.length < 3) ? true : false }
-            onPress={ () => {addItem(), props.add(), Init()}}>
-          <Text style={ (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
-            Add task
-          </Text>
-          </Icon.Button>
-        </TouchableOpacity> */}
-
-        {/* <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', height: 50, backgroundColor: 'black' }}
-          onPress={() => {
-            navigation.push("Add", {
-              onPressAdd:(value, value2)=>{
-                // addItem(value), props.add(), Init()
-                 addItem(value, value2), Init()
-              }
-            })
-          }}>
-          <Text style={styles.buttonText}>
-            Add task
-          </Text>
-        </TouchableOpacity> */}
-
+        
         <View style={styles.upcomingScreenContainer}>
           <Text style={styles.upcomingScreen}> Upcoming task </Text>
         </View>
@@ -436,34 +398,47 @@ export function HomeScreen (props) {
           data={upListData} // this holds th data for upListData
           keyExtractor={(item) => item.id} // definitive id fthat will serve as a key for an item
           renderItem={renderItem} // render all property of an item
-          ItemSeparatorComponent={ListSeparator} // separator for each tasks
-          ListEmptyComponent={ListEmpty} // For no items in the list
-          ListFooterComponent={ListFooter}// call the ListComponent component
+          //ItemSeparatorComponent={ListSeparator} // separator for each tasks
+          // ListEmptyComponent={ListEmpty} // For no items in the list
+          //ListFooterComponent={ListFooter}// call the ListComponent component
         />
+
+        < ListSeparator></ListSeparator>
 
         <View style={styles.completedScreenContainer}>
           <Text style={styles.completedScreen}> Completed task </Text>
-          <Text style={{ fontSize: 14, fontWeight: 'bold' }}> Recently completed task </Text>
+          {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}> Recently completed task </Text> */}
           <Text style={{ fontSize: 10 }}> {markedItem.title} </Text>
         </View>
 
+      
         <FlatList
           data={compListData} // this holds th data for upListData
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          ItemSeparatorComponent={ListSeparator}
-          ListEmptyComponent={ListEmpty} // For no items in the list
-          ListFooterComponent={<ListFooter text="This is the end of task list" />}
+          //ItemSeparatorComponent={ListSeparator}
+          // ListEmptyComponent={ListEmpty} // For no items in the list
+          //ListFooterComponent={<ListFooter text="This is the end of task list" />}
         />
 
           < ListSeparator></ListSeparator>
 
-        <TouchableOpacity  >
+        {/* <TouchableOpacity  >
           <Text style={styles.displayAllObjectItemsText} onPress={ () => displayAllObjectItems() }>
-            Click to display all Items in console!
+            Refresh list
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
+        <View style={styles.refreshContainer}>
+          <TouchableOpacity style={styles.refreshButton}
+            onPress={ () => displayAllObjectItems() } >
+              <Icon style={styles.refreshIcon} name="reload1" />
+                <Text style={styles.refreshText}>
+                  Refresh list
+                </Text>
+          </TouchableOpacity>
+        </View>
+        
 
       </ScrollView>
 
@@ -473,15 +448,27 @@ export function HomeScreen (props) {
       }}>
 
         <View style={styles.navBackground}>
-          <TouchableOpacity style={styles.navFormat}>
+
+          {/* <TouchableOpacity style={styles.navFormat}>
             <Image style={styles.navIcon}
               source={require("../images/home.png")}
             />
             <Text style={styles.navText}>
               Home
             </Text>
+          </TouchableOpacity> */}
 
+          
+          <TouchableOpacity style={styles.navFormat}
+            onPress={()=>{      
+              navigation.navigate('Home')
+            }}>
+              <Icon style={styles.homeIcon} name="home" />
+              <Text>
+                Home
+              </Text>
           </TouchableOpacity>
+
 
           <TouchableOpacity style={styles.navFormat}
            onPress={() => {
@@ -489,37 +476,22 @@ export function HomeScreen (props) {
               onPressAdd:(value, value2,id)=>{
                 // addItem(value), props.add(), Init()
                  addItem(value, value2,id), Init()
-              }
-            })
-          }}
-          
-          
-          
-          
-  
-          >
-            <Image style={styles.navAddIcon}
-              source={require("../images/addTask.png")}
-            />
-
-            <Text style={styles.navAddText}>
-              Add Task
-
+                  }
+                })
+              }}>      
+           <Icon style={styles.addIcon} name="pluscircle" />
+            <Text>
+              Add
             </Text>
-
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navFormat}>
-            <Image style={styles.navIcon}
-              source={require("../images/notification.png")}
-            />
-
-            <Text style={styles.navText}>
-              Notification
-
-            </Text>
-
+            <Icon style={styles.notificationIcon} name="notification" />
+              <Text>
+                notification
+              </Text>
           </TouchableOpacity>
+
         </View>
 
       </View>
@@ -529,6 +501,7 @@ export function HomeScreen (props) {
 }
 
 const styles = StyleSheet.create({
+  
   homeContainer: {
     flex: 1,
     // justifyContent: 'center',
@@ -619,31 +592,49 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
+    // marginTop: 5,
+    margin: 10,//
+  },
+
+  modalView: {
     padding: 5,
-    marginTop: 5,
+    backgroundColor: 'white',
   },
 
   shareButtonStyle: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
-    padding: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 10,
     borderRadius: 300,
-    backgroundColor: 'cyan',
+    backgroundColor: '#313cdf',
   },
 
   shareButtonIcon: {
-
     color: "white",
-
   },
 
   shareButtonTextStyle: {
     fontWeight: 'bold',
     fontSize: 10,
+    color: 'white',
   },
 
+  buttonClose: {
+    borderRadius: 300,
+    alignItems: 'center',
+    padding: 10,
+    borderColor: 'gray',
+    borderWidth: 0.5,  
+  },
+
+  buttonCloseTextStyle: { 
+    fontSize: 10,
+  },
+  
   navBackground: {
     backgroundColor: '#eee',
     height: 60,
@@ -674,14 +665,58 @@ const styles = StyleSheet.create({
   //   marginBottom: 60
 
   // },
-  navAddIcon: {
-    alignSelf: 'center',
+
+  homeIcon: {
+    color:"black",
+    fontSize: 20,
   },
+
+  addIcon: {
+    color:"#313cdf",
+    fontSize: 30,
+  },
+
+  notificationIcon: {
+    color:"black",
+    fontSize: 20,
+  },
+
 
   displayAllObjectItemsText: {
     textAlign: 'center',
     margin : 10,
     
-  }
+  },
+
+  refreshContainer: {
+    alignItems: 'center',
+  },
+
+
+  refreshButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 300,
+    backgroundColor: '#313cdf',
+    width: 150,
+    borderWidth: 1,
+    borderColor: "white"
+  },
+
+  refreshIcon: {     
+    color:"white",
+    fontSize: 20,    
+  },
+
+  refreshText: {
+    fontWeight: 'bold',
+        fontSize: 15,
+        color: 'white',
+        padding: 5,  
+  },
 
 })

@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from '@react-navigation/native'
 
+import { SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
+
+import Icon from 'react-native-vector-icons/AntDesign'
+import { LinearGradient } from 'expo-linear-gradient'
 
 // Firebase config
 import { firebaseConfig } from '../config/config'
@@ -62,105 +64,142 @@ const clickHandler = (data) => {
 const navigation = useNavigation();
 const {onPressAdd} =props.route.params
  
-  return <SafeAreaView>
+  return <SafeAreaView style={styles.safeAreaViewContainer}>
+    <LinearGradient
+      style={styles.box}
+      colors={['blue', 'cyan']}
+      start={{ x: 1, y: 1 }}
+      end={{ x: 0, y: 0 }}
+    />
+
     <View style={styles.header}>
-      <TextInput style={styles.input}
-        placeholder='Enter task here...'
-        onChangeText={(value) => {
-          setInput(value)
-        }}
-      />
+      <Text style = {styles.textInputLabel}>Title</Text>
+        <TextInput style={styles.input}
+          placeholder='Enter task title here...'
+          onChangeText={(value) => {
+            setInput(value)
+          }}
+        />
     </View>
 
     <View style={styles.header}>
-      <TextInput style={styles.input}
-        placeholder='Enter description here...'
-        onChangeText={(value2) => {
-          setInput2(value2)
-        }}
-      />
+      <Text style = {styles.textInputLabel}>Description</Text>
+        <TextInput style={styles.input}
+          placeholder='Enter description here...'
+          multiline={true}
+          onChangeText={(value2) => {
+            setInput2(value2)
+          }}
+        />
     </View>
 
 
-    <TouchableOpacity style={{ marginTop: 10 }}>
-      <Icon.Button name="pluscircleo" style={(input.length < 3) ? styles.buttonDisabled : styles.button}
-        disabled={(input.length < 3) ? true : false}
+      <TouchableOpacity style={(input.length < 3 || input2.length < 3) ? styles.addButtonDisabled : styles.addButton}
+        disabled = { (input.length < 3 || input2.length < 3) ? true : false }
         onPress={async() => {
-         const id = await submitData(`users/${props.auth.uid}/items`,input, input2)
+          const id = await submitData(`users/${props.auth.uid}/items`,input, input2)
           onPressAdd(input, input2,id)
           clickHandler(props.data)
         }}>
-        <Text style={(input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
-          Add task
+        <Icon style={(input.length < 3 || input2.length < 3) ? styles.addButtonIconDisabled: styles.addButtonIcon} name="pluscircle" />
+        <Text style={(input.length < 3 || input2.length < 3) ? styles.addButtonTextStyleDisabled: styles.addButtonTextStyle}>
+          Add
         </Text>
-      </Icon.Button>
-    </TouchableOpacity>
+      </TouchableOpacity>
+
   </SafeAreaView>
 }
 
 const styles = StyleSheet.create({
-  input: {
-    padding: 5,
-    fontSize: 20,
-    backgroundColor: 'white',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+  safeAreaViewContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  box: {
+    position: 'absolute',
+    width: '100%',
+    height: 800,
+    opacity: 0.8,
+  },
+
+  input: {
+    backgroundColor: '#B3E0F2',
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    marginBottom: 15,
+    padding: 10,
+    fontSize: 12,
   },
 
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    width: 300,
+    padding: 5,
+    marginBottom: 15,
   },
 
-  buttonDisabled: {
-    backgroundColor: 'gray',
-    color: 'gray',
-
+  textInputLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 5,  
   },
 
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#313cdf',
   },
 
-  buttonTextDisabled: {
-    fontSize: 20,
-    backgroundColor: 'transparent',
-  },
-
-  buttonText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-
-  QrCodeContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 5,
-    marginTop: 5,
-  },
-
-  shareButtonStyle: {
+  addButton: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 10,
+    marginBottom: 10,
     padding: 5,
     borderRadius: 300,
-    backgroundColor: 'cyan',
+    backgroundColor: '#313cdf',
+    width: 150,
+    borderWidth: 1,
+    borderColor: "white"
   },
 
-  shareButtonIcon: {
-
-    color: "white",
-
+  addButtonDisabled: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 300,
+    backgroundColor: 'gray',
+    width: 150,
+    borderWidth: 1,
+    borderColor: "black"
   },
 
-  shareButtonTextStyle: {
+  addButtonTextStyle: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 15,
+    color: 'white',
+    padding: 5,     
+  },
+
+  addButtonTextStyleDisabled: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'black',
+    padding: 5, 
+  },
+
+  addButtonIcon: {     
+    color:"white",
+    fontSize: 20,
+  },
+
+  addButtonIconDisabled: {     
+    color:"black", 
+    fontSize: 20,    
   },
 
 })

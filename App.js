@@ -182,12 +182,12 @@ export default function App() {
         </Stack.Screen>
 
         {/* <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} /> */}
-        <Stack.Screen name="Add" options={{ title: 'Add Task', headerTintColor: '#000' }} >
+        <Stack.Screen name="Add" options={{ title: 'Create new task', headerTintColor: '#000' }} >
         {(props) => <AddScreen {...props}  auth={user} data={appData} addDataToFirestore={addDataToFirestore} />}
         </Stack.Screen>
 
          {/* <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} /> */}
-        <Stack.Screen name="Edit" options={{ title: 'Edit Task', headerTintColor: '#000' }} >
+        <Stack.Screen name="Edit" options={{ title: 'Task details', headerTintColor: '#000' }} >
         {(props) => <NewEditScreen {...props}  auth={user} data={appData} editDataToFirestore={editDataToFirestore} />}
         </Stack.Screen>
 
