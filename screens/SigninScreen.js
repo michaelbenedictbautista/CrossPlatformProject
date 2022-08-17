@@ -57,14 +57,10 @@ useEffect( () => {
 useEffect( () => {
   // auth is passed on as a prop from App.js
   if( props.auth ) {
-    navigation.reset( { index: 0, routes: [ {name: "Home"} ]} )
+    navigation.reset( { index: 0, routes: [ {name: "Home"}]})
+    
   }
 }, [ props.auth ])
-
-
-
-
-
 
 
 // Same with signup
@@ -78,89 +74,126 @@ useEffect( () => {
 }, [ props.auth ])
 
   return (
-    <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
+    <KeyboardAvoidingView style={styles.signInView} behavior='padding'>
     
-    <Text style = {styles.signUpTitle}>Welcome to Sign in page</Text>
+    <Text style = {styles.signInTitle}>Log in to xTask</Text>
 
-    {/* Wrap the TextIput elements to View */}
-    <View style = {styles.signupForm}>
+    <View style = {styles.signinForm}>
       
       <Text style = {styles.label}>Email</Text>
-      <TextInput style = {styles.input} onChangeText = { (value) => setEmail(value)}/>
+      <TextInput style = {styles.input} 
+      onChangeText = { (value) => setEmail(value)}
+      placeholder="john@gmail.com"
+      placeholderTextColor = "darkgray"
+      keyboardType="email-address" 
+      />
 
       <Text style = {styles.label}>Password</Text>
-      <TextInput style = {styles.input} secureTextEntry={true} onChangeText={ (value) => setPassword (value) }/>
-
-      <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
-      disabled={ (validEmail && validPassword) ? false : true }
-      onPress = { () => signIn( email, password ) }
-      >
-          <Text style={styles.buttonText}>Sign in</Text>
-      </TouchableOpacity>
+      <TextInput style = {styles.input}
+        secureTextEntry={true}
+        onChangeText={ (value) => setPassword (value) }
+        placeholder="password"
+        placeholderTextColor = "darkgray"
+        />
 
     </View>
 
+    <View style={ styles.buttonContainer}>
+      <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
+        disabled={ (validEmail && validPassword) ? false : true }
+        onPress = { () => signIn( email, password ) }>    
+          <Text style={styles.buttonText}>Log in</Text>
+      </TouchableOpacity>
+    </View>
 
-    <TouchableOpacity onPress={ () => navigation.navigate('Signup')}>
-        <Text>Go to Sign up</Text>
-    </TouchableOpacity>
+    <View style={styles.contentView}>
+      <Text>
+        <Text style={styles.content}>Need an account?</Text>
+          <Text style={styles.SignUpHereText}
+                onPress={() => navigation.navigate('Signup')}>{' '}
+            Sign up
+          </Text>
+      </Text>
+    </View>
 
-    <TouchableOpacity onPress={ () => navigation.navigate('Home', {name: 'Custom Home header'})}>
-        <Text>Go to Home</Text>
-    </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView> 
   )
 }
 
 const styles = StyleSheet.create( {
 
-  signupView: {
+  signInView: {
     
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  signUpTitle: {
+  signInTitle: {
     marginBottom: 15,
+    fontSize: 20,
+    fontWeight: 'bold',
     
   },
 
-  signupForm: {
-    backgroundColor: 'gray',
+  signinForm: {
     width: 300,
-    padding: 10,
+    padding: 5,
     marginBottom: 15,
   },
 
   label: {
+    fontSize: 16,
+    fontWeight: 'bold',
     marginVertical: 10,
   },
 
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#B3E0F2',
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 0.5,
     marginBottom: 15,
     padding: 10,
+    fontSize: 12,
   },
 
   form: {
     justifyContent: 'flex-start',
   },
 
-  button: {
-    backgroundColor: 'cyan',
+  buttonContainer: {
+    // backgroundColor: 'gray',
+    width: 300,
+    padding: 5,
+    marginBottom: 5,
+  },
+
+  button: { 
+    backgroundColor: 'dodgerblue',
+    borderRadius: 5,
     alignItems: 'center',
     padding: 10,
-    borderRadius: 300,
   },
 
   buttonDisabled: {
     backgroundColor: 'gray',
+    borderRadius: 5,
+    alignItems: 'center',
     padding: 10,
   },
 
   buttonText: {
     fontWeight: 'bold',
+    color: 'white',
   },
+
+  SignUpHereText: {
+    color: 'blue',
+    fontWeight: 'bold'
+  },
+  placeholder: {
+    fontSize: 20,
+  }
 
 } ) 

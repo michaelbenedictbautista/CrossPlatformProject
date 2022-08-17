@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
-import { HomeScreen } from './HomeScreen'
+import Icon from 'react-native-vector-icons/AntDesign'
+
 
 export function SignupScreen( props ) {
   const navigation = useNavigation();
@@ -55,43 +56,54 @@ export function SignupScreen( props ) {
   useEffect( () => {
     // auth is passed on as a prop from App.js
     if( props.auth ) {
-      navigation.reset( { index: 0, routes: [ {name: "Home"} ]} )
+      navigation.reset( { index: 0, routes: [ {name: "Home"} ]},  )
+      
     }
   }, [ props.auth ])
 
   return (
     <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
     
-    <Text style = {styles.signUpTitle}>Welcome to Sign up page</Text>
+    <Text style = {styles.signUpTitle}>Sign up to xTask</Text>
 
-    {/* Wrap the TextIput elements to View */}
     <View style = {styles.signupForm}>
       
       <Text style = {styles.label}>Email</Text>
-      <TextInput style = {styles.input} onChangeText = { (value) => setEmail(value)}/>
+      <TextInput style = {styles.input} 
+        onChangeText = { (value) => setEmail(value)}
+        placeholder="Enter new email here..."
+        placeholderTextColor = "darkgray"
+        keyboardType="email-address"   
+        />
+
 
       <Text style = {styles.label}>Password</Text>
-      <TextInput style = {styles.input} secureTextEntry={true} onChangeText={ (value) => setPassword (value) }/>
-
-      <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
-      disabled={ (validEmail && validPassword) ? false : true }
-      onPress={() => {signUp(email, password)}}>
-          <Text style={styles.buttonText}>Sign up</Text>
-      </TouchableOpacity>
-
+      <TextInput style = {styles.input}
+        secureTextEntry={true} 
+        onChangeText={ (value) => setPassword (value) }
+        placeholder="Enter new password here..."
+        placeholderTextColor = "darkgray"
+        />
     </View>
 
-    <TouchableOpacity onPress={ () => navigation.navigate('Signin')}>
-        <Text>Go to Sign in</Text>
-    </TouchableOpacity>
 
-    <TouchableOpacity onPress={ () => navigation.navigate('Home', {name: 'Custom Home header'})}>
-        <Text>Go to Home</Text>
-    </TouchableOpacity>
+    <View style={ styles.buttonContainer}>
+      <TouchableOpacity style={ (validEmail && validPassword) ? styles.button : styles.buttonDisabled }
+        disabled={ (validEmail && validPassword) ? false : true }
+        onPress={() => {signUp(email, password)}}>
+            <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
+    </View>
 
-    <TouchableOpacity onPress={ () => navigation.navigate('Edit')}>
-        <Text>Go to Edit task</Text>
-    </TouchableOpacity>
+    <View style={styles.contentView}>
+      <Text>
+        <Text style={styles.content}>Already have an account?</Text>
+          <Text style={styles.LoginHereText}
+                onPress={() => navigation.navigate('Signin')}>{' '}
+            Log in
+          </Text>
+      </Text>
+    </View>
 
     </KeyboardAvoidingView>
   )
@@ -99,8 +111,7 @@ export function SignupScreen( props ) {
 
 const styles = StyleSheet.create( {
 
-  signupView: {
-    
+  signupView: {  
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -108,44 +119,68 @@ const styles = StyleSheet.create( {
 
   signUpTitle: {
     marginBottom: 15,
-    
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 
   signupForm: {
-    backgroundColor: 'gray',
     width: 300,
-    padding: 10,
+    padding: 5,
     marginBottom: 15,
   },
 
   label: {
+    fontSize: 16,
+    fontWeight: 'bold',
     marginVertical: 10,
   },
 
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#B3E0F2',
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 0.5,
     marginBottom: 15,
     padding: 10,
+    fontSize: 12,
   },
 
   form: {
     justifyContent: 'flex-start',
   },
 
+
+  buttonContainer: {
+    // backgroundColor: 'gray',
+    width: 300,
+    padding: 5,
+    marginBottom: 5,
+  },
+
+
+  
   button: {
-    backgroundColor: 'cyan',
+    backgroundColor: 'dodgerblue',
+    borderRadius: 5, 
     alignItems: 'center',
     padding: 10,
-    borderRadius: 300,
   },
 
   buttonDisabled: {
     backgroundColor: 'gray',
+    borderRadius: 5,
+    alignItems: 'center',
     padding: 10,
   },
 
   buttonText: {
     fontWeight: 'bold',
+    color: 'white',
+  },
+
+  LoginHereText: {
+    color: 'blue',
+    fontWeight: 'bold'
   },
 
 } ) 

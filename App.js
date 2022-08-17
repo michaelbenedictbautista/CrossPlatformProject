@@ -50,11 +50,12 @@ const LogoTitle = () => {
         style={styles.logoImage}
         source={require('./assets/logo.png')}
       />
-      {/* <Text style = {styles.titleText}>My Signup</Text> */}
+      {/* <Text style = {styles.titleText}>Sign up</Text> */}
     </View>
 
   );
 }
+
 
 const Stack = createNativeStackNavigator()
 
@@ -147,39 +148,39 @@ export default function App() {
         },
       }}>
 
-        <Stack.Screen name="Signup" options={{ headerTitle: (props) => <LogoTitle {...props} /> }}>
+        <Stack.Screen name="Signup" options={{ headerLeft: (props) => <LogoTitle {...props} />,
+          title: "Sign up", headerTintColor: '#000' }} >
+
           {(props) => <SignupScreen {...props} signup={register} auth={user} />}
         </Stack.Screen>
 
 
-        <Stack.Screen name="Signin" options={{ title: 'My Signin' }} >
+        <Stack.Screen name="Signin" options={{ headerLeft: (props) => <LogoTitle {...props} />,
+          title: "Log in", headerTintColor: '#000' }} >
+
           {(props) => <SigninScreen {...props} signin={signin} auth={user} />}
         </Stack.Screen>
 
         {/* <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'My Home' }} /> */}
-        <Stack.Screen name="Home" options={{
-          headerTitle: (props) => <LogoTitle {...props} />,
+        <Stack.Screen name="Home" options={{ headerLeft: (props) => <LogoTitle {...props} />,
+          title: "Home", headerTintColor: '#000',
           headerRight: (props) => <SignoutButton {...props} signout={signout} />,
-
         }}
+        
         >
           {/* {(props) => <HomeScreen {...props} auth={user} add={addData} />} */}
           {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} />}
         </Stack.Screen>
 
-       
-
         {/* <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} /> */}
-        <Stack.Screen name="Add" options={{ title: 'Add Task' }} >
+        <Stack.Screen name="Add" options={{ title: 'Add Task', headerTintColor: '#000' }} >
         {(props) => <AddScreen {...props}  auth={user} data={appData} addDataToFirestore={addDataToFirestore} />}
         </Stack.Screen>
 
-
          {/* <Stack.Screen name="Edit" component={NewEditScreen} options={{ title: 'Edit Task' }} /> */}
-        <Stack.Screen name="Edit" options={{ title: 'Edit Task' }} >
+        <Stack.Screen name="Edit" options={{ title: 'Edit Task', headerTintColor: '#000' }} >
         {(props) => <NewEditScreen {...props}  auth={user} data={appData} editDataToFirestore={editDataToFirestore} />}
         </Stack.Screen>
-
 
       </Stack.Navigator>
     </NavigationContainer>
@@ -187,15 +188,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  logoContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginBottom: 1,
-    padding: 1,
-
-  },
+  // logoContainer: {
+  //   flex: 1,
+  //   // flexDirection: 'row',
+  //   // alignItems: 'center',
+  //   // justifyContent: 'flex-start',
+  //   // marginBottom: 1,
+  //   // padding: 1,  
+  // },
 
   logoImage: {
     width: 40,
@@ -206,8 +206,10 @@ const styles = StyleSheet.create({
 
   titleText: {
     fontWeight: 'bold',
-    color: '#fff',
+    color: 'black',
     fontSize: 17,
+    marginStart: 60,
+    
   }
 
 });
