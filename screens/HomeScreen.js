@@ -46,8 +46,9 @@ export function HomeScreen (props) {
     (displayData(`users/${props.auth.uid}/items/`))
 
     console.log(props.data)
-    // const {title} = props.data;
-    // console.log({title})
+    setUpListData(props.data)
+    // const {item} = props.data;
+    // console.log({item})
   }
 
   // Local storage

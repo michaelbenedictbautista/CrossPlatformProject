@@ -3,7 +3,6 @@ import {useState, useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
-import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps'
 
 import { HomeScreen } from './HomeScreen'
 
@@ -16,8 +15,11 @@ export function SigninScreen( props ) {
  const [validEmail, setValidEmail] = useState(false)
  const [password, setPassword] = useState('')
  const [validPassword, setValidPassword] = useState(false)
-
-
+//  const [focus, setFocus] =  useState(false)/////////
+//  const customStyle = focus ? styles.inputFocus : styles.input //////////
+// const customStyleInFocus = styles.inputFocus
+// const customStyleInBlur = styles.input
+  
 //function to validate email
 const validateEmail = ( emailStr ) => {
   // check if email contains '@' symbol
@@ -80,12 +82,15 @@ useEffect( () => {
 
     <View style = {styles.signinForm}>
       
+      
       <Text style = {styles.label}>Email</Text>
-      <TextInput style = {styles.input} 
+      <TextInput style = {styles.input}     
       onChangeText = { (value) => setEmail(value)}
       placeholder="john@gmail.com"
       placeholderTextColor = "darkgray"
-      keyboardType="email-address" 
+      keyboardType="email-address"
+      // onFocus={() => {customStyleInFocus}}
+      // onBlur = {() => {customStyleInBlur}}
       />
 
       <Text style = {styles.label}>Password</Text>
@@ -93,7 +98,7 @@ useEffect( () => {
         secureTextEntry={true}
         onChangeText={ (value) => setPassword (value) }
         placeholder="password"
-        placeholderTextColor = "darkgray"
+        placeholderTextColor = "darkgray" 
         />
 
     </View>
@@ -145,7 +150,7 @@ const styles = StyleSheet.create( {
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginVertical: 5,///////////
   },
 
   input: {
@@ -157,6 +162,19 @@ const styles = StyleSheet.create( {
     padding: 10,
     fontSize: 12,
   },
+
+
+  // /////////////////
+  // inputFocus: {
+  //   backgroundColor: '#B3E0F2',
+  //   borderRadius: 5,
+  //   borderColor: 'blue',
+  //   borderWidth: 2,///////
+  //   marginBottom: 15,
+  //   padding: 10,
+  //   fontSize: 12,
+  // },
+
 
   form: {
     justifyContent: 'flex-start',

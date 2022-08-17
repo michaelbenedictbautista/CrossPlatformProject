@@ -132,7 +132,7 @@ const styles = StyleSheet.create( {
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginVertical: 10,
+    marginVertical: 5,/////////
   },
 
   input: {
