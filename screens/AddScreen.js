@@ -35,13 +35,14 @@ export function AddScreen(props) {
  
 //   setDate(fullDate)
   
-const submitData = ( path, taskTitle, taskDescription) => {
+const submitData = async ( path, taskTitle, taskDescription) => {
   let newDate = new Date().getDate()
   let newMonth = new Date().getMonth() + 1;
   let newYear = new Date().getFullYear();
   let fullDate = newDate + '/' + newMonth + '/' + newYear
-  const dataObj = {title: taskTitle,  description: taskDescription, date: fullDate }
-  props.addDataToFirestore( path, dataObj )
+  const dataObj = {title: taskTitle,  description: taskDescription, date: fullDate, status: false }
+ const id = await  props.addDataToFirestore( path, dataObj )
+ return id
 }
 
 useEffect( () => {
@@ -59,7 +60,7 @@ const clickHandler = (data) => {
 }
 
 const navigation = useNavigation();
-const {onPressAdd ,} =props.route.params
+const {onPressAdd} =props.route.params
  
   return <SafeAreaView>
     <View style={styles.header}>
@@ -84,10 +85,10 @@ const {onPressAdd ,} =props.route.params
     <TouchableOpacity style={{ marginTop: 10 }}>
       <Icon.Button name="pluscircleo" style={(input.length < 3) ? styles.buttonDisabled : styles.button}
         disabled={(input.length < 3) ? true : false}
-        onPress={() => {
-          onPressAdd(input, input2), submitData(`users/${props.auth.uid}/items`,input, input2),
+        onPress={async() => {
+         const id = await submitData(`users/${props.auth.uid}/items`,input, input2)
+          onPressAdd(input, input2,id)
           clickHandler(props.data)
-          // navigation.goBack()
         }}>
         <Text style={(input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>
           Add task

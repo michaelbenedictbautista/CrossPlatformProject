@@ -8,17 +8,16 @@ import { useNavigation } from '@react-navigation/native'
 export function NewEditScreen( props ) {
     const navigation = useNavigation();
     const {onPressSave } =props.route.params
-    const [input, setInput] = useState(props.route.params.value)
-    const [input2, setInput2] = useState(props.route.params.value2)
+    const [input, setInput] = useState(props.route.params.value?.title)
+    const [input2, setInput2] = useState(props.route.params.value?.description)
     //const [storedDate, setStoredDate] = useState(props.route.params.value3)
-
 
     const submitEditedData = ( path, taskTitle, taskDescription) => {
       // let newDate = new Date().getDate()
       // let newMonth = new Date().getMonth() + 1;
       // let newYear = new Date().getFullYear();
       // let fullDate = newDate + '/' + newMonth + '/' + newYear
-      const dataObj = {title: taskTitle,  description: taskDescription }
+      const dataObj = {...props.route.params.value, title: taskTitle,  description: taskDescription }
       props.editDataToFirestore( path, dataObj )
     }
 
@@ -51,7 +50,7 @@ export function NewEditScreen( props ) {
           disabled = { (input.length < 3) ? true : false }
           onPress={()=>{
             // submitData(`users/${props.auth.uid}/items`,input, input2),
-            onPressSave(input, input2), submitEditedData(`users/${props.auth.uid}/items`,input, input2)
+            onPressSave(props.route.params.value,input, input2), submitEditedData(`users/${props.auth.uid}/items`,input, input2)
             navigation.goBack()
           }}>
         <Text style={ (input.length < 3) ? styles.buttonTextDisabled : styles.buttonText}>

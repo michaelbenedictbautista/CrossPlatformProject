@@ -25,7 +25,8 @@ import { getFirestore,
         addDoc, 
         updateDoc, 
         query, 
-        onSnapshot 
+        onSnapshot,
+        doc
       } from 'firebase/firestore'
 
 import {
@@ -65,21 +66,10 @@ export default function App() {
   const [user, setUser] = useState()
   
   // Store state of data
-  const [appData, setAppData] =useState([])
+  const [appData, setAppData] =useState()
 
   // Verify user
-  const authObj = getAuth()
-  onAuthStateChanged(authObj, (user) => {
-    if (user) {
-      setUser(user)
-      if (!appData) {
-        getData(`users/${user.uid}/items`)
-      }
-    }
-    else {
-      setUser(null)
-    }
-  })
+ 
 
   const register = (email, password) => {
 
@@ -95,8 +85,8 @@ export default function App() {
   const signin = (email, password) => {
 
     signInWithEmailAndPassword(authObj, email, password)
-      .then((userCredential) => setUser(userCredential.user))
-      .catch((error) => console.log(error))
+    .then((userCredential) => setUser(userCredential.user))
+    .catch((error) => console.log(error))
   }
 
   const signout = () => {
@@ -110,7 +100,7 @@ export default function App() {
   const addDataToFirestore = async ( FScollection, data ) => {
     // add data to a collection with FS generated id
     const ref = await addDoc( collection(db,FScollection), data )
-    console.log( ref.id )
+    return ref.id
   }
 
   // Get data/document from firestore
@@ -130,11 +120,30 @@ export default function App() {
  
   const editDataToFirestore = async ( FScollection, data, ) => {
     // edit data to a collection with FS generated id
-    const ref = await updateDoc( collection(db,FScollection), data)
-    
+    const frankDocRef = doc(db, FScollection, data.id);
+    const ref = await updateDoc(frankDocRef, data)
     console.log( ref.id )
   }
 
+  const changeDataStatusToFirestore= async ( FScollection, data ) => {
+    // edit data to a collection with FS generated id
+    const frankDocRef = doc(db, FScollection, data.id);
+    const ref = await updateDoc(frankDocRef, data)
+  
+  }
+
+  const authObj = getAuth()
+  onAuthStateChanged(authObj, (user) => {
+    if (user) {
+      setUser(user)
+      if (!appData) {
+        getDataFromFirestore(`users/${user.uid}/items`)
+      }
+    }
+    else {
+      setUser(null)
+    }
+  })
 
   return (
     <NavigationContainer>
@@ -169,7 +178,7 @@ export default function App() {
         
         >
           {/* {(props) => <HomeScreen {...props} auth={user} add={addData} />} */}
-          {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} />}
+          {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} changeDataStatusToFirestore={changeDataStatusToFirestore} />}
         </Stack.Screen>
 
         {/* <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add Task' }} /> */}

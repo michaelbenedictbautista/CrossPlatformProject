@@ -33,24 +33,14 @@ export function HomeScreen (props) {
     }
   }, [props.auth])
 
-  useEffect( () => {
-    //console.log( props.data )
-  }, [props.data])
+ 
 
   // Get data from firestore by using the getData function
   const displayData = ( path) => {
     props.getDataFromFirestore( path )
   }
 
-  const displayAllObjectItems = () => {
-    (displayData(`users/${props.auth.uid}/items/`))
-
-    console.log(props.data)
-    setUpListData(props.data)
-    // const {item} = props.data;
-    // console.log({item})
-  }
-
+  
   // Local storage
   const storage = new Storage({
     // maximum capacity, default 1000 key-ids
@@ -81,6 +71,24 @@ export function HomeScreen (props) {
   
   // getters and setters for task done
   const [markedItem, setMarkedItem] = useState([])
+
+
+  const displayAllObjectItems = () => {
+    (displayData(`users/${props.auth.uid}/items/`))
+    if(props.data){
+      const cacheUpList=[]
+      const cacheComList=[]
+      props.data.map(item=>{
+        if(item.status){
+          cacheComList.push(item)
+        }else{
+          cacheUpList.push(item)
+        }
+      })
+      setUpListData(cacheUpList)
+      setCompListData(cacheComList)
+    }
+  }
 
   // using reference to implement the clear() method
   // const txtInput = useRef()
@@ -168,14 +176,12 @@ export function HomeScreen (props) {
 
  /*Function declaration and definition to add input value to the upListData
   adding item to our upcoming list data*/
-  const addItem = (input, input2) => {
-    // We use Timestamp to generate unique ID
-    let newId = new Date().getTime()
+  const addItem = (input, input2,id) => {
     let newDate = new Date().getDate()
     let newMonth = new Date().getMonth() + 1;
     let newYear = new Date().getFullYear();
     let fullDate = newDate + '/' + newMonth + '/' + newYear
-    let newItem = { id: newId, title: input, description: input2, date: fullDate, status: false }
+    let newItem = { id: id, title: input, description: input2, date: fullDate, status: false }
     let newList = upListData.concat(newItem)
     setUpListData(newList)
     // txtInput.current.clear() // clear textbox after hitting the add button
@@ -213,15 +219,11 @@ export function HomeScreen (props) {
     let isComp = newCompList.length > 0
     
     navigation.push("Edit", {
-      value: isComp ? newCompList[0].title: newList[0].title,
-
-
+      value: isComp ? newCompList[0]: newList[0],
       //value: isComp ? [newCompList[0].title newCompList[0].description]: newList[0].title,
-     
-      
-      onPressSave: (value, value2) => {
+      onPressSave: (item1, value, value2) => {
         //  addItem(value), props.add(), Init()
-        if (isComp && isComp2) {
+        if (item1.status) {
           const newList = compListData.map(item => {
             if (item.id === itemId) {
               return { ...item, title: value, description: value2}
@@ -247,8 +249,7 @@ export function HomeScreen (props) {
     let newUpdatedItem = ([])
     upListData.map((item) => {
       if (item.id === itemId) {
-
-        return newUpdatedItem = { id: item.id, title: item.title, description: item.description, date: item.fullDate, status: true }
+        return newUpdatedItem = { ...item, status: true }
       }
       else {
         return item
@@ -259,15 +260,17 @@ export function HomeScreen (props) {
       if (item.id !== itemId) {
         return item
       }
-
     })
+
+
     // re-render uplistaData
     setUpListData(newList2)
-
+    console.log("newUpdatedItem===",newUpdatedItem);
+    //
+    props.changeDataStatusToFirestore(`users/${props.auth.uid}/items/`, newUpdatedItem)
     // set status as mark
     setMarkedItem(newUpdatedItem)
     let newCompletedList = compListData.concat(newUpdatedItem)
-
     // re-render compListData
     setCompListData(newCompletedList)
   }
@@ -402,7 +405,6 @@ export function HomeScreen (props) {
             ref = {txtInput}
           />
         </View>
-
         <TouchableOpacity>   
           <Icon.Button name="pluscircleo" style={ (input.length < 3) ? styles.buttonDisabled : styles.button}
             disabled = { (input.length < 3) ? true : false }
@@ -484,9 +486,9 @@ export function HomeScreen (props) {
           <TouchableOpacity style={styles.navFormat}
            onPress={() => {
             navigation.push("Add", {
-              onPressAdd:(value, value2)=>{
+              onPressAdd:(value, value2,id)=>{
                 // addItem(value), props.add(), Init()
-                 addItem(value, value2), Init()
+                 addItem(value, value2,id), Init()
               }
             })
           }}
