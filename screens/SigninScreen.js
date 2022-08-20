@@ -122,7 +122,7 @@ useEffect( () => {
     </View>
 
     <View style={styles.signInWithContainer}>
-      <Text>Or Sign in with------------------------------------</Text>
+      <Text>Or Sign in with...</Text>
     </View>
 
     <View style={ styles.buttonContainer}>

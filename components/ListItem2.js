@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 
-export function ListItem(props) {
+export function ListItem2(props) {
   return (
     <View style={styles.item}>
 
@@ -11,10 +11,6 @@ export function ListItem(props) {
 
       <TouchableOpacity style={styles.removeTouchableOp} onPress={() => props.remove(props.item.id)}>
         <Icon name="delete" style={styles.trashIcon} />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.markTouchableOp} onPress={() => props.update(props.item.id)}>
-        <Icon name="check" style={styles.bookmarkIcon} />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.generateTouchableOp} onPress={() => props.generateQRCode(props.item.id)} >
@@ -58,21 +54,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  markTouchableOp: {
+  generateTouchableOp: {
     position: 'absolute',
     right: 50,
     justifyContent: 'center',
   },
 
-  generateTouchableOp: {
-    position: 'absolute',
-    right: 80,
-    justifyContent: 'center',
-  },
-
   edit: {
     position: 'absolute',
-    right: 110,
+    right: 80,
     justifyContent: 'center',
   },
 
@@ -84,11 +74,6 @@ const styles = StyleSheet.create({
   },
 
   trashIcon: {
-    fontSize: 20,
-    color: "white",
-  },
-
-  bookmarkIcon: {
     fontSize: 20,
     color: "white",
   },

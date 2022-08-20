@@ -2,11 +2,13 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { TouchableOpacity, Share, Alert, Modal, Pressable, Image } from 'react-native'
-import { SafeAreaView } from 'react-native'
+import { TouchableOpacity, Share, Alert, Modal, } from 'react-native'
+import { LogBox } from 'react-native'
+import { SafeAreaView, ScrollView } from 'react-native'
 
 // Components
 import { ListItem } from '../components/ListItem'
+import { ListItem2 } from '../components/ListItem2'
 import { ListSeparator } from '../components/ListSeparator'
 
 // External Lib
@@ -33,6 +35,11 @@ export function HomeScreen(props) {
     props.getDataFromFirestore(path)
   }
 
+  // Ignore log notification by message:
+  LogBox.ignoreLogs(['Warning: ...'])
+
+  // Ignore all log notifications:
+  LogBox.ignoreAllLogs()
 
   // Local storage
   const storage = new Storage({
@@ -61,10 +68,8 @@ export function HomeScreen(props) {
   const [qrValueDescription, setQrValueDescription] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-
   // getters and setters for task done
   const [markedItem, setMarkedItem] = useState([])
-
 
   // Display all items 
   const displayAllObjectItems = () => {
@@ -84,7 +89,6 @@ export function HomeScreen(props) {
     }
   }
 
-
   // Function definition and declaration for saving and loading data from local storage
   const saveData = () => {
     storage.save({
@@ -92,7 +96,6 @@ export function HomeScreen(props) {
       data: JSON.stringify(upListData, compListData)
     });
   }
-
 
   const loadData = () => {
     storage
@@ -142,7 +145,6 @@ export function HomeScreen(props) {
     }
   })
 
-
   /*Function declaration and definition to add input value to the upListData
    adding item to our upcoming list data*/
   const addItem = (input, input2, id) => {
@@ -153,7 +155,6 @@ export function HomeScreen(props) {
     let newItem = { id: id, title: input, description: input2, date: fullDate, status: false }
     let newList = upListData.concat(newItem)
     setUpListData(newList)
-
   }
 
   // Function declaration and definition to delete task from upListData and compListData
@@ -256,19 +257,22 @@ export function HomeScreen(props) {
     setQrvalue(newGeneratedItem.title)
     setQrValueDate(newGeneratedItem.date)
     setQrValueDescription(newGeneratedItem.description)
+  }
 
-    // let newGeneratedItem2 = ([])
-    // compListData.map((item) => {
-    //   if (item.id === itemId) {
-    //     return newGeneratedItem2 = { id: item.id, title: item.title, description: item.description, date: item.date, status: true }
-    //   }
-    //   else {
-    //     return item
-    //   }
-    // })
-    // setQrvalue(newGeneratedItem2.title)
-    // setQrValueDate(newGeneratedItem2.date)
-    // setQrValueDescription(newGeneratedItem2.description)
+  const generateCode2 = (itemId) => {
+    setModalVisible(true)
+    let newGeneratedItem2 = ([])
+    compListData.map((item) => {
+      if (item.id === itemId) {
+        return newGeneratedItem2 = { id: item.id, title: item.title, description: item.description, date: item.date, status: true }
+      }
+      else {
+        return item
+      }
+    })
+    setQrvalue(newGeneratedItem2.title)
+    setQrValueDate(newGeneratedItem2.date)
+    setQrValueDescription(newGeneratedItem2.description)
   }
 
   // Function to share QR code
@@ -285,15 +289,22 @@ export function HomeScreen(props) {
     });
   };
 
-  // Function to render list of items in the array
+  // Function to render upcominglist of items in the array
   const renderItem = ({ item }) => (
     // rendering our list of items(tasks)
     <ListItem item={item} remove={deleteItem}
       update={updateStatus} generateQRCode={generateCode}
       edit={editItem}
-    // clickHandler={props.data}
     />
+  )
 
+  // Function to render completedlist of items in the array
+  const renderItem2 = ({ item }) => (
+    // rendering our list of items(tasks)
+    <ListItem2 item={item} remove={deleteItem}
+      update={updateStatus} generateQRCode={generateCode2}
+      edit={editItem}
+    />
   )
 
   // initialise function to set variable to desired useState.
@@ -303,7 +314,6 @@ export function HomeScreen(props) {
     setQrValueDate('')
     setQrValueDescription('')
   }, [])
-
 
   return (
 
@@ -315,40 +325,6 @@ export function HomeScreen(props) {
         start={{ x: 1, y: 1 }}
         end={{ x: 0, y: 0 }}
       />
-
-      <View style={styles.upcomingScreenContainer}>
-        <Text style={styles.upcomingScreen}> Upcoming task </Text>
-      </View>
-
-      < SafeAreaView style={{ height: 125 }}>
-        <FlatList
-          data={upListData} // this holds th data for upListData
-          keyExtractor={(item) => item.id} // definitive id fthat will serve as a key for an item
-          renderItem={renderItem} // render all property of an item
-        />
-      </SafeAreaView>
-
-      < ListSeparator></ListSeparator>
-
-      <View style={styles.completedScreenContainer}>
-        <Text style={styles.completedScreen}> Completed task </Text>
-      </View>
-
-      < SafeAreaView style={{ height: 125 }}>
-        <FlatList
-          data={compListData} // this holds th data for upListData
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          // renderItem={({ item }) => {
-          //   return (
-          //   <View>
-          //     <Text>{item.title}</Text>
-          //   </View>
-          //    )}}
-        />
-      </SafeAreaView>
-
-      < ListSeparator></ListSeparator>
 
       <Modal
         animationType="slide"
@@ -385,7 +361,7 @@ export function HomeScreen(props) {
               onPress={shareQRCode}>
               <Icon style={styles.shareButtonIcon} name="save" />
               <Text style={styles.shareButtonTextStyle}>
-                Share QR code
+                Save QR code
               </Text>
             </TouchableOpacity>
 
@@ -401,8 +377,29 @@ export function HomeScreen(props) {
         </View>
       </Modal>
 
-      <SafeAreaView>
+      <ScrollView>
 
+      <View style={styles.upcomingScreenContainer}>
+        <Text style={styles.upcomingScreen}> Upcoming task </Text>
+      </View>
+
+      <FlatList
+          data={upListData} // this holds th data for upListData
+          keyExtractor={(item) => item.id} // definitive id fthat will serve as a key for an item
+          renderItem={renderItem} // render all property of an item
+        />
+
+      < ListSeparator></ListSeparator>
+
+      <View style={styles.completedScreenContainer}>
+        <Text style={styles.completedScreen}> Completed task </Text>
+      </View>
+
+      <FlatList
+          data={compListData} // this holds th data for upListData
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem2}
+        />
 
         <View style={styles.refreshContainer}>
           <TouchableOpacity style={styles.refreshButton}
@@ -414,12 +411,11 @@ export function HomeScreen(props) {
           </TouchableOpacity>
         </View>
 
-
-      </SafeAreaView>
-
+      </ScrollView>
+       
       <View style={{
         alignItems: 'center',
-        paddingHorizontal: 10,
+        //paddingHorizontal: 10,
       }}>
 
         <View style={styles.navBackground}>
@@ -428,10 +424,7 @@ export function HomeScreen(props) {
             onPress={() => {
               navigation.navigate('Home')
             }}>
-            <Icon style={styles.homeIcon} name="home" />
-            <Text>
-              Home
-            </Text>
+            <Icon style={styles.homeIcon} name="home" />            
           </TouchableOpacity>
 
 
@@ -445,16 +438,10 @@ export function HomeScreen(props) {
               })
             }}>
             <Icon style={styles.addIcon} name="pluscircle" />
-            <Text>
-              Add
-            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.navFormat}>
             <Icon style={styles.notificationIcon} name="notification" />
-            <Text>
-              notification
-            </Text>
           </TouchableOpacity>
 
         </View>
@@ -553,8 +540,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
-    // marginTop: 5,
-    margin: 10,//
+    margin: 10,
   },
 
   modalView: {
@@ -597,7 +583,7 @@ const styles = StyleSheet.create({
 
   navBackground: {
     backgroundColor: '#eee',
-    height: 60,
+    height: 70,
     width: '100%',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -605,7 +591,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15
+    paddingHorizontal: 30,
   },
 
   navFormat: {
@@ -620,19 +606,18 @@ const styles = StyleSheet.create({
 
   homeIcon: {
     color: "black",
-    fontSize: 20,
+    fontSize: 25,
   },
 
   addIcon: {
     color: "#313cdf",
-    fontSize: 30,
+    fontSize: 35,
   },
 
   notificationIcon: {
     color: "black",
-    fontSize: 20,
+    fontSize: 25,
   },
-
 
   displayAllObjectItemsText: {
     textAlign: 'center',

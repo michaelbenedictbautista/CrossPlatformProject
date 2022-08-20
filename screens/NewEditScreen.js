@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   box: {
     position: 'absolute',
     width: '100%',
-    height: 800,
+    height: 900,
     opacity: 0.8,
   },
 
