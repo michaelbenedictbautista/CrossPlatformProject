@@ -2,7 +2,7 @@
 import {useState, useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Linking} from 'react-native'
 
 import { HomeScreen } from './HomeScreen'
 
@@ -127,7 +127,7 @@ useEffect( () => {
 
     <View style={ styles.buttonContainer}>
       <TouchableOpacity style={ styles.buttonGoogle }
-        onPress = { () => {Linking.openURL ('https://accounts.google.com/signin/v2/identifier?hl=en-GB&continue=https%3A%2F%2Fwww.google.com%3Fhl%3Den-GB&ec=GAlA8wE&flowName=GlifWebSignIn&flowEntry=AddSession')}}     
+        onPress = { () => {Linking.openURL ('https://accounts.google.com/signin/v2/identifier?hl=en-GB&continue=https%3A%2F%2Fwww.google.com%3Fhl%3Den-GB&ec=GAlA8wE&flowName=GlifWebSignIn&flowEntry=AddSession')}}    
         >             
           <Text style={styles.buttonGoogleText}>Continue with Google</Text>
       </TouchableOpacity>

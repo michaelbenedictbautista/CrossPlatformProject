@@ -1,8 +1,11 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native'
+// components from react
+import React, { useState, useEffect } from 'react';
 
+// components from react native
+import { useNavigation } from '@react-navigation/native'
 import { SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity, Text } from 'react-native';
 
+//External Lib
 import Icon from 'react-native-vector-icons/AntDesign'
 import { LinearGradient } from 'expo-linear-gradient'
 
@@ -10,7 +13,6 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { firebaseConfig } from '../config/config'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, collection, addDoc, } from 'firebase/firestore'
-
 
 // Initialise the firebase app abd save reference
 const FBapp = initializeApp(firebaseConfig)
@@ -23,20 +25,7 @@ export function AddScreen(props) {
 
   const [ input, setInput ] = useState('')
   const [ input2, setInput2 ] = useState('')
-  //const [ date, setDate ] = useState()
 
-// // Adding data to firestore
-// const addDataToFirestore = async (FSCollection) => {
-  
-//   let taskTitle = (input)
-//   let newDate = new Date().getDate()
-//   let newMonth = new Date().getMonth() + 1;
-//   let newYear = new Date().getFullYear();
-//   let fullDate = newDate + '/' + newMonth + '/' + newYear
-//   let date = fullDate
- 
-//   setDate(fullDate)
-  
 const submitData = async ( path, taskTitle, taskDescription) => {
   let newDate = new Date().getDate()
   let newMonth = new Date().getMonth() + 1;
@@ -47,20 +36,24 @@ const submitData = async ( path, taskTitle, taskDescription) => {
  return id
 }
 
+// observe for changes
 useEffect( () => {
   if( !props.auth ) {
     navigation.reset( { index: 0, routes: [ {name: "Signin"} ]} )
   }  
 }, [props.auth] )
 
+// observe for changes
 useEffect( () => {
   //console.log( props.data )
 }, [props.data])
 
+// transfer data and navigate to home
 const clickHandler = (data) => {
   navigation.navigate('Home', data )
 }
 
+//use of props navigation and route params
 const navigation = useNavigation();
 const {onPressAdd} =props.route.params
  
@@ -92,8 +85,7 @@ const {onPressAdd} =props.route.params
           }}
         />
     </View>
-
-
+    
       <TouchableOpacity style={(input.length < 3 || input2.length < 3) ? styles.addButtonDisabled : styles.addButton}
         disabled = { (input.length < 3 || input2.length < 3) ? true : false }
         onPress={async() => {

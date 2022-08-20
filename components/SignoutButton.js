@@ -1,9 +1,9 @@
-import {Text, TouchableOpacity} from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 
-export function SignoutButton ( props ) {
+export function SignoutButton(props) {
     return (
-    <TouchableOpacity onPress={ () => props.signout()}>
-        <Text> Sign out</Text>
-    </TouchableOpacity>
+        <TouchableOpacity onPress={() => props.signout()}>
+            <Text> Sign out</Text>
+        </TouchableOpacity>
     )
 }

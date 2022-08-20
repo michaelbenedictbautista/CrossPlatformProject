@@ -1,46 +1,39 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRoute } from '@react-navigation/native'
 
-import { StyleSheet, Text, View, FlatList, TextInput, VirtualizedList } from 'react-native'
+import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity, Share, Alert, Modal, Pressable, Image } from 'react-native'
+import { SafeAreaView } from 'react-native'
 
-/// Components
+// Components
 import { ListItem } from '../components/ListItem'
 import { ListSeparator } from '../components/ListSeparator'
-import { ListEmpty } from '../components/ListEmpty'
-import { ListFooter } from '../components/ListFooter'
-import { AddScreen } from './AddScreen'
 
 // External Lib
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
-import constants from 'expo-constants'
 import Icon from 'react-native-vector-icons/AntDesign'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ScrollView } from 'react-native'
 
-export function HomeScreen (props) {
+export function HomeScreen(props) {
 
   const navigation = useNavigation();
 
-  // navigate user to Sigin screen after Sign out.
+  // Navigate user to Sigin screen after Sign out.
   useEffect(() => {
     if (!props.auth) {
       navigation.reset({ index: 0, routes: [{ name: "Signin" }] })
     }
   }, [props.auth])
 
- 
 
   // Get data from firestore by using the getData function
-  const displayData = ( path) => {
-    props.getDataFromFirestore( path )
+  const displayData = (path) => {
+    props.getDataFromFirestore(path)
   }
 
-  
+
   // Local storage
   const storage = new Storage({
     // maximum capacity, default 1000 key-ids
@@ -68,20 +61,21 @@ export function HomeScreen (props) {
   const [qrValueDescription, setQrValueDescription] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  
+
   // getters and setters for task done
   const [markedItem, setMarkedItem] = useState([])
 
 
+  // Display all items 
   const displayAllObjectItems = () => {
     (displayData(`users/${props.auth.uid}/items/`))
-    if(props.data){
-      const cacheUpList=[]
-      const cacheComList=[]
-      props.data.map(item=>{
-        if(item.status){
+    if (props.data) {
+      const cacheUpList = []
+      const cacheComList = []
+      props.data.map(item => {
+        if (item.status) {
           cacheComList.push(item)
-        }else{
+        } else {
           cacheUpList.push(item)
         }
       })
@@ -90,11 +84,6 @@ export function HomeScreen (props) {
     }
   }
 
-  // using reference to implement the clear() method
-  // const txtInput = useRef()
-
-  // Set input to empty string as a default state
-  // const [input, setInput] = useState('')
 
   // Function definition and declaration for saving and loading data from local storage
   const saveData = () => {
@@ -154,29 +143,9 @@ export function HomeScreen (props) {
   })
 
 
-  // const route = useRoute()
-  // const { id, title } = route.params
-  
-
-
-  // /*Function declaration and definition to add input value to the upListData
-  // adding item to our upcoming list data*/
-  // const addItem = (input) => {
-  //   // We use Timestamp to generate unique ID
-  //   let newId = new Date().getTime()
-  //   let newDate = new Date().getDate()
-  //   let newMonth = new Date().getMonth() + 1;
-  //   let newYear = new Date().getFullYear();
-  //   let fullDate = newDate + '/' + newMonth + '/' + newYear
-  //   let newItem = { id: newId, name: input, date: fullDate, status: false }
-  //   let newList = upListData.concat(newItem)
-  //   setUpListData(newList)
-  //   // txtInput.current.clear() // clear textbox after hitting the add button
-  // }
-
- /*Function declaration and definition to add input value to the upListData
-  adding item to our upcoming list data*/
-  const addItem = (input, input2,id) => {
+  /*Function declaration and definition to add input value to the upListData
+   adding item to our upcoming list data*/
+  const addItem = (input, input2, id) => {
     let newDate = new Date().getDate()
     let newMonth = new Date().getMonth() + 1;
     let newYear = new Date().getFullYear();
@@ -184,9 +153,8 @@ export function HomeScreen (props) {
     let newItem = { id: id, title: input, description: input2, date: fullDate, status: false }
     let newList = upListData.concat(newItem)
     setUpListData(newList)
-    // txtInput.current.clear() // clear textbox after hitting the add button
-  }
 
+  }
 
   // Function declaration and definition to delete task from upListData and compListData
   const deleteItem = (itemId) => {
@@ -217,16 +185,16 @@ export function HomeScreen (props) {
     })
 
     let isComp = newCompList.length > 0
-    
+
     navigation.push("Edit", {
-      value: isComp ? newCompList[0]: newList[0],
+      value: isComp ? newCompList[0] : newList[0],
       //value: isComp ? [newCompList[0].title newCompList[0].description]: newList[0].title,
       onPressSave: (item1, value, value2) => {
         //  addItem(value), props.add(), Init()
         if (item1.status) {
           const newList = compListData.map(item => {
             if (item.id === itemId) {
-              return { ...item, title: value, description: value2}
+              return { ...item, title: value, description: value2 }
             }
             return item
           })
@@ -234,7 +202,7 @@ export function HomeScreen (props) {
         } else {
           const newList = upListData.map(item => {
             if (item.id === itemId) {
-              return { ...item, title: value, description: value2}
+              return { ...item, title: value, description: value2 }
             }
             return item
           })
@@ -261,11 +229,9 @@ export function HomeScreen (props) {
         return item
       }
     })
-
-
     // re-render uplistaData
     setUpListData(newList2)
-    console.log("newUpdatedItem===",newUpdatedItem);
+    console.log("newUpdatedItem===", newUpdatedItem);
     //
     props.changeDataStatusToFirestore(`users/${props.auth.uid}/items/`, newUpdatedItem)
     // set status as mark
@@ -289,7 +255,20 @@ export function HomeScreen (props) {
     })
     setQrvalue(newGeneratedItem.title)
     setQrValueDate(newGeneratedItem.date)
-    setQrValueDescription(newGeneratedItem.description)    
+    setQrValueDescription(newGeneratedItem.description)
+
+    // let newGeneratedItem2 = ([])
+    // compListData.map((item) => {
+    //   if (item.id === itemId) {
+    //     return newGeneratedItem2 = { id: item.id, title: item.title, description: item.description, date: item.date, status: true }
+    //   }
+    //   else {
+    //     return item
+    //   }
+    // })
+    // setQrvalue(newGeneratedItem2.title)
+    // setQrValueDate(newGeneratedItem2.date)
+    // setQrValueDescription(newGeneratedItem2.description)
   }
 
   // Function to share QR code
@@ -309,12 +288,12 @@ export function HomeScreen (props) {
   // Function to render list of items in the array
   const renderItem = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem item={item} remove={deleteItem} 
-              update={updateStatus} generateQRCode={generateCode} 
-              edit={editItem}
-              // clickHandler={props.data}
-              />
-              
+    <ListItem item={item} remove={deleteItem}
+      update={updateStatus} generateQRCode={generateCode}
+      edit={editItem}
+    // clickHandler={props.data}
+    />
+
   )
 
   // initialise function to set variable to desired useState.
@@ -337,6 +316,40 @@ export function HomeScreen (props) {
         end={{ x: 0, y: 0 }}
       />
 
+      <View style={styles.upcomingScreenContainer}>
+        <Text style={styles.upcomingScreen}> Upcoming task </Text>
+      </View>
+
+      < SafeAreaView style={{ height: 125 }}>
+        <FlatList
+          data={upListData} // this holds th data for upListData
+          keyExtractor={(item) => item.id} // definitive id fthat will serve as a key for an item
+          renderItem={renderItem} // render all property of an item
+        />
+      </SafeAreaView>
+
+      < ListSeparator></ListSeparator>
+
+      <View style={styles.completedScreenContainer}>
+        <Text style={styles.completedScreen}> Completed task </Text>
+      </View>
+
+      < SafeAreaView style={{ height: 125 }}>
+        <FlatList
+          data={compListData} // this holds th data for upListData
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          // renderItem={({ item }) => {
+          //   return (
+          //   <View>
+          //     <Text>{item.title}</Text>
+          //   </View>
+          //    )}}
+        />
+      </SafeAreaView>
+
+      < ListSeparator></ListSeparator>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -344,18 +357,17 @@ export function HomeScreen (props) {
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
-        }}
+        }} >
 
-      >
         <View style={styles.QrCodeContainer}>
           <View style={styles.modalView}>
 
             <QRCode
               getRef={(ref) => (myQRCode = ref)}
 
-              //QR code value
+              //QR code value function
               // value={qrvalue ? qrvalue : 'NA'}
-              value={[qrvalue,'\n', qrValueDescription ,'\n', qrValueDate]}
+              value={[qrvalue, '\n', qrValueDescription, '\n', qrValueDate]}
               //size of QR Code
               size={150}
               //Color of the QR Code (Optional)
@@ -367,7 +379,7 @@ export function HomeScreen (props) {
               logoMargin={4}
               justifyContent='center'
             />
-            
+
             <TouchableOpacity
               style={styles.shareButtonStyle}
               onPress={shareQRCode}>
@@ -380,7 +392,7 @@ export function HomeScreen (props) {
             <TouchableOpacity
               // style={[styles.button, styles.buttonClose]}
               style={styles.buttonClose}
-              onPress={() => setModalVisible(!modalVisible)}   
+              onPress={() => setModalVisible(!modalVisible)}
             >
               <Text style={styles.buttonCloseTextStyle}>close</Text>
             </TouchableOpacity>
@@ -389,58 +401,21 @@ export function HomeScreen (props) {
         </View>
       </Modal>
 
-      <ScrollView>
-        
-        <View style={styles.upcomingScreenContainer}>
-          <Text style={styles.upcomingScreen}> Upcoming task </Text>
-        </View>
-        <FlatList
-          data={upListData} // this holds th data for upListData
-          keyExtractor={(item) => item.id} // definitive id fthat will serve as a key for an item
-          renderItem={renderItem} // render all property of an item
-          //ItemSeparatorComponent={ListSeparator} // separator for each tasks
-          // ListEmptyComponent={ListEmpty} // For no items in the list
-          //ListFooterComponent={ListFooter}// call the ListComponent component
-        />
+      <SafeAreaView>
 
-        < ListSeparator></ListSeparator>
-
-        <View style={styles.completedScreenContainer}>
-          <Text style={styles.completedScreen}> Completed task </Text>
-          {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}> Recently completed task </Text> */}
-          <Text style={{ fontSize: 10 }}> {markedItem.title} </Text>
-        </View>
-
-      
-        <FlatList
-          data={compListData} // this holds th data for upListData
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          //ItemSeparatorComponent={ListSeparator}
-          // ListEmptyComponent={ListEmpty} // For no items in the list
-          //ListFooterComponent={<ListFooter text="This is the end of task list" />}
-        />
-
-          < ListSeparator></ListSeparator>
-
-        {/* <TouchableOpacity  >
-          <Text style={styles.displayAllObjectItemsText} onPress={ () => displayAllObjectItems() }>
-            Refresh list
-          </Text>
-        </TouchableOpacity> */}
 
         <View style={styles.refreshContainer}>
           <TouchableOpacity style={styles.refreshButton}
-            onPress={ () => displayAllObjectItems() } >
-              <Icon style={styles.refreshIcon} name="reload1" />
-                <Text style={styles.refreshText}>
-                  Refresh list
-                </Text>
+            onPress={() => displayAllObjectItems()} >
+            <Icon style={styles.refreshIcon} name="reload1" />
+            <Text style={styles.refreshText}>
+              Refresh list
+            </Text>
           </TouchableOpacity>
         </View>
-        
 
-      </ScrollView>
+
+      </SafeAreaView>
 
       <View style={{
         alignItems: 'center',
@@ -449,37 +424,27 @@ export function HomeScreen (props) {
 
         <View style={styles.navBackground}>
 
-          {/* <TouchableOpacity style={styles.navFormat}>
-            <Image style={styles.navIcon}
-              source={require("../images/home.png")}
-            />
-            <Text style={styles.navText}>
-              Home
-            </Text>
-          </TouchableOpacity> */}
-
-          
           <TouchableOpacity style={styles.navFormat}
-            onPress={()=>{      
+            onPress={() => {
               navigation.navigate('Home')
             }}>
-              <Icon style={styles.homeIcon} name="home" />
-              <Text>
-                Home
-              </Text>
+            <Icon style={styles.homeIcon} name="home" />
+            <Text>
+              Home
+            </Text>
           </TouchableOpacity>
 
 
           <TouchableOpacity style={styles.navFormat}
-           onPress={() => {
-            navigation.push("Add", {
-              onPressAdd:(value, value2,id)=>{
-                // addItem(value), props.add(), Init()
-                 addItem(value, value2,id), Init()
-                  }
-                })
-              }}>      
-           <Icon style={styles.addIcon} name="pluscircle" />
+            onPress={() => {
+              navigation.push("Add", {
+                onPressAdd: (value, value2, id) => {
+                  // addItem(value), props.add(), Init()
+                  addItem(value, value2, id), Init()
+                }
+              })
+            }}>
+            <Icon style={styles.addIcon} name="pluscircle" />
             <Text>
               Add
             </Text>
@@ -487,9 +452,9 @@ export function HomeScreen (props) {
 
           <TouchableOpacity style={styles.navFormat}>
             <Icon style={styles.notificationIcon} name="notification" />
-              <Text>
-                notification
-              </Text>
+            <Text>
+              notification
+            </Text>
           </TouchableOpacity>
 
         </View>
@@ -501,14 +466,9 @@ export function HomeScreen (props) {
 }
 
 const styles = StyleSheet.create({
-  
+
   homeContainer: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // marginTop: constants.statusBarHeight,
-    //backgroundColor: '#0bcdd4',
-
   },
 
   generateShareContainerEnabled: {
@@ -628,13 +588,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderColor: 'gray',
-    borderWidth: 0.5,  
+    borderWidth: 0.5,
   },
 
-  buttonCloseTextStyle: { 
+  buttonCloseTextStyle: {
     fontSize: 10,
   },
-  
+
   navBackground: {
     backgroundColor: '#eee',
     height: 60,
@@ -658,40 +618,31 @@ const styles = StyleSheet.create({
     color: '#444'
   },
 
-  // navAddIcon:{
-  //   resizeMode: 'cover',
-  //   width: 40, 
-  //   height: 40, 
-  //   marginBottom: 60
-
-  // },
-
   homeIcon: {
-    color:"black",
+    color: "black",
     fontSize: 20,
   },
 
   addIcon: {
-    color:"#313cdf",
+    color: "#313cdf",
     fontSize: 30,
   },
 
   notificationIcon: {
-    color:"black",
+    color: "black",
     fontSize: 20,
   },
 
 
   displayAllObjectItemsText: {
     textAlign: 'center',
-    margin : 10,
-    
+    margin: 10,
+
   },
 
   refreshContainer: {
     alignItems: 'center',
   },
-
 
   refreshButton: {
     flexDirection: 'row',
@@ -707,16 +658,16 @@ const styles = StyleSheet.create({
     borderColor: "white"
   },
 
-  refreshIcon: {     
-    color:"white",
-    fontSize: 20,    
+  refreshIcon: {
+    color: "white",
+    fontSize: 20,
   },
 
   refreshText: {
     fontWeight: 'bold',
-        fontSize: 15,
-        color: 'white',
-        padding: 5,  
+    fontSize: 15,
+    color: 'white',
+    padding: 5,
   },
 
 })

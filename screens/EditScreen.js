@@ -1,10 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
+// Imported froim react
 import { useState, useEffect } from 'react'
 
+// Imported froim react-native
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView, SafeAreaView } from 'react-native';
 
 export function EditScreen() {
 
+  // function to observe for changes
   useEffect(() => {
 
     var date = new Date().getDate()

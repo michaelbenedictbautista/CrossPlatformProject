@@ -1,17 +1,16 @@
 import { View, Text, StyleSheet } from 'react-native'
 
-export function ListFooter ( props ) {
+export function ListFooter(props) {
     return (
-        <View style={ styles.container }>  
-            {/* <Text > {props.text} </Text> */}
-            <Text style={ styles.text }> End of task list </Text>       
+        <View style={styles.container}>
+            <Text style={styles.text}> End of task list </Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        alignItems:'center',
+        alignItems: 'center',
     },
 
     text: {
