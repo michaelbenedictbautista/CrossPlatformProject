@@ -13,6 +13,10 @@ export function ListItem2(props) {
         <Icon name="delete" style={styles.trashIcon} />
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.markTouchableOp} onPress={() => props.update(props.item.id)}>
+        <Icon name="check" style={styles.bookmarkIcon} />
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.generateTouchableOp} onPress={() => props.generateQRCode(props.item.id)} >
         <Icon name="qrcode" style={styles.generateIcon} />
       </TouchableOpacity>
@@ -20,6 +24,10 @@ export function ListItem2(props) {
       <TouchableOpacity style={styles.edit} onPress={() => props.edit(props.item.id)}>
         <Icon name="edit" style={styles.editIcon} />
       </TouchableOpacity>
+
+
+      
+
 
     </View>
 
@@ -54,26 +62,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  generateTouchableOp: {
+  markTouchableOp: {
     position: 'absolute',
     right: 50,
     justifyContent: 'center',
   },
 
-  edit: {
+  generateTouchableOp: {
     position: 'absolute',
     right: 80,
     justifyContent: 'center',
   },
 
-
-  display: {
+  edit: {
     position: 'absolute',
-    right: 150,
+    right: 110,
     justifyContent: 'center',
   },
 
   trashIcon: {
+    fontSize: 20,
+    color: "white",
+  },
+
+  bookmarkIcon: {
     fontSize: 20,
     color: "white",
   },

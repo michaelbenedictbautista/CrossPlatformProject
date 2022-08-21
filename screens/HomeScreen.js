@@ -213,7 +213,7 @@ export function HomeScreen(props) {
     })
   }
 
-  // Function declaration and definition to mark task as done
+  // Function declaration and definition to mark Upcomingtask as done
   const updateStatus = (itemId) => {
     let newUpdatedItem = ([])
     upListData.map((item) => {
@@ -241,6 +241,37 @@ export function HomeScreen(props) {
     // re-render compListData
     setCompListData(newCompletedList)
   }
+
+  // Function declaration and definition to mark CompletedTask as done
+  const updateStatus2 = (itemId) => {
+    let newUpdatedItem = ([])
+    compListData.map((item) => {
+      if (item.id === itemId) {
+        return newUpdatedItem = { ...item, status: false }
+      }
+      else {
+        return item
+      }
+    })
+
+    let newList2 = compListData.filter((item) => {
+      if (item.id !== itemId) {
+        return item
+      }
+    })
+    // re-render uplistaData
+    setCompListData(newList2)
+    console.log("newUpdatedItem===", newUpdatedItem);
+    //
+    props.changeDataStatusToFirestore(`users/${props.auth.uid}/items/`, newUpdatedItem)
+    // set status as mark
+    setMarkedItem(newUpdatedItem)
+    let newCompletedList = upListData.concat(newUpdatedItem)
+    // re-render compListData
+    setUpListData(newCompletedList)
+  }
+
+
 
   // Function to generate QR code
   const generateCode = (itemId) => {
@@ -302,7 +333,7 @@ export function HomeScreen(props) {
   const renderItem2 = ({ item }) => (
     // rendering our list of items(tasks)
     <ListItem2 item={item} remove={deleteItem}
-      update={updateStatus} generateQRCode={generateCode2}
+      update={updateStatus2} generateQRCode={generateCode2}
       edit={editItem}
     />
   )
