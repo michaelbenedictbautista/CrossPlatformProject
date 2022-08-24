@@ -1,16 +1,15 @@
 {
   "expo": {
-    "name": "CrossPlatformProject",
-    "slug": "CrossPlatformProject",
+    "name": "xTask App",
+    "slug": "xTask-app-slug",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splashScreen2.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
-      "width": "100%"
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.multimediaartistry.xtask"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView} from 'react-native'
+import { Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 
 
@@ -62,7 +63,10 @@ export function SignupScreen( props ) {
   }, [ props.auth ])
 
   return (
-    <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
+    // <KeyboardAvoidingView style={styles.signupView} behavior='padding'>
+
+    <KeyboardAvoidingView style={styles.signupView} behavior= {Platform.OS === 'ios' ? 'padding' : 'height'} 
+    keyboardVerticalOffset = {Platform.OS === 'ios' ? 30 : -999999} >
     
     <Text style = {styles.signUpTitle}>Sign up to xTask</Text>
 

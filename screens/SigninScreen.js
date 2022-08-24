@@ -2,7 +2,7 @@
 import {useState, useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Linking} from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Linking, Platform} from 'react-native'
 
 import { HomeScreen } from './HomeScreen'
 
@@ -76,7 +76,9 @@ useEffect( () => {
 }, [ props.auth ])
 
   return (
-    <KeyboardAvoidingView style={styles.signInView} behavior='padding'>
+
+    <KeyboardAvoidingView style={styles.signInView} behavior= {Platform.OS === 'ios' ? 'padding' : 'height'}
+    keyboardVerticalOffset = {Platform.OS === 'ios' ? 30 : -999999} >
     
     <Text style = {styles.signInTitle}>Log in to xTask</Text>
 
