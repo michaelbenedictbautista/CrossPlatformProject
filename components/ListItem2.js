@@ -5,9 +5,15 @@ export function ListItem2(props) {
   return (
     <View style={styles.item}>
 
-      <Text style={styles.itemNameText}>{props.item.title}</Text>
-      {/* <Text style={ styles.itemDescText}>{ props.item.description }</Text> */}
-      <Text style={styles.itemDateText}>{props.item.date}</Text>
+      <TouchableOpacity onPress={() => props.edit(props.item.id)}>
+        <Text style={styles.itemNameText}>{props.item.title}</Text>
+        {/* <Text style={ styles.itemDescText}>{ props.item.description }</Text> */}
+        <Text style={styles.itemDateText}>{props.item.date}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.generateTouchableOp} onPress={() => props.generateQRCode(props.item.id)} >
+        <Icon name="qrcode" style={styles.generateIcon} />
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.removeTouchableOp} onPress={() => props.remove(props.item.id)}>
         <Icon name="delete" style={styles.trashIcon} />
@@ -17,17 +23,9 @@ export function ListItem2(props) {
         <Icon name="check" style={styles.bookmarkIcon} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.generateTouchableOp} onPress={() => props.generateQRCode(props.item.id)} >
-        <Icon name="qrcode" style={styles.generateIcon} />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.edit} onPress={() => props.edit(props.item.id)}>
+      {/* <TouchableOpacity style={styles.edit} onPress={() => props.edit(props.item.id)}>
         <Icon name="edit" style={styles.editIcon} />
-      </TouchableOpacity>
-
-
-      
-
+      </TouchableOpacity> */}
 
     </View>
 
@@ -36,7 +34,7 @@ export function ListItem2(props) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 5,
+    padding: 8,
     flex: 1,
     justifyContent: 'center',
   },
@@ -56,29 +54,32 @@ const styles = StyleSheet.create({
     fontSize: 40,
   },
 
+  generateTouchableOp: {
+    position: 'absolute',
+    // right: 80,
+    right: 90,
+    justifyContent: 'center',
+  },
+
   removeTouchableOp: {
     position: 'absolute',
-    right: 20,
+    // right: 50,
+    right: 50,
     justifyContent: 'center',
   },
 
   markTouchableOp: {
     position: 'absolute',
-    right: 50,
+    // right: 20,
+    right: 10,
     justifyContent: 'center',
   },
 
-  generateTouchableOp: {
-    position: 'absolute',
-    right: 80,
-    justifyContent: 'center',
-  },
-
-  edit: {
-    position: 'absolute',
-    right: 110,
-    justifyContent: 'center',
-  },
+  // edit: {
+  //   position: 'absolute',
+  //   right: 110,
+  //   justifyContent: 'center',
+  // },
 
   trashIcon: {
     fontSize: 20,

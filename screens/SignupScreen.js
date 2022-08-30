@@ -75,6 +75,7 @@ export function SignupScreen( props ) {
       <Text style = {styles.label}>Email</Text>
       <TextInput style = {styles.input} 
         onChangeText = { (value) => setEmail(value)}
+        autoCorrect={false}
         placeholder="Enter new email here..."
         placeholderTextColor = "darkgray"
         keyboardType="email-address"   

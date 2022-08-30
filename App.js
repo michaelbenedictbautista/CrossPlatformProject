@@ -159,7 +159,7 @@ export default function App() {
 
         <Stack.Screen name="Signin" options={{
           headerLeft: (props) => <LogoTitle {...props} />,
-          title: "Log in", headerTintColor: '#000'
+          title: "Log in", headerTintColor: '#000', headerTitleAlign: 'center',
         }} >
 
           {(props) => <SigninScreen {...props} signin={signin} auth={user} />}
@@ -167,7 +167,7 @@ export default function App() {
 
         <Stack.Screen name="Signup" options={{
           headerLeft: (props) => <LogoTitle {...props} />,
-          title: "Sign up", headerTintColor: '#000'
+          title: "Sign up", headerTintColor: '#000', headerTitleAlign: 'center',
         }} >
 
           {(props) => <SignupScreen {...props} signup={register} auth={user} />}
@@ -175,18 +175,18 @@ export default function App() {
 
         <Stack.Screen name="Home" options={{
           headerLeft: (props) => <LogoTitle {...props} />,
-          title: "Home", headerTintColor: '#000',
+          title: "Home", headerTintColor: '#000', headerTitleAlign: 'center',
           headerRight: (props) => <SignoutButton {...props} signout={signout} />,
         }} >
 
           {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} changeDataStatusToFirestore={changeDataStatusToFirestore} />}
         </Stack.Screen>
 
-        <Stack.Screen name="Add" options={{ title: 'Create new task', headerTintColor: '#000' }} >
+        <Stack.Screen name="Add" options={{ title: 'Create new task', headerTintColor: '#000', headerTitleAlign: 'center', }} >
           {(props) => <AddScreen {...props} auth={user} data={appData} addDataToFirestore={addDataToFirestore} />}
         </Stack.Screen>
 
-        <Stack.Screen name="Edit" options={{ title: 'Task details', headerTintColor: '#000' }} >
+        <Stack.Screen name="Edit" options={{ title: 'Task details', headerTintColor: '#000', headerTitleAlign: 'center', }} >
           {(props) => <NewEditScreen {...props} auth={user} data={appData} editDataToFirestore={editDataToFirestore} />}
         </Stack.Screen>
 
