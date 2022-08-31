@@ -105,7 +105,7 @@ export function SignupScreen( props ) {
         <Text style={styles.content}>Already have an account?</Text>
           <Text style={styles.LoginHereText}
                 onPress={() => navigation.navigate('Signin')}>{' '}
-            Log in
+            Log in here...
           </Text>
       </Text>
     </View>
@@ -118,20 +118,23 @@ const styles = StyleSheet.create( {
 
   signupView: {  
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    //justifyContent: 'center',
+    //alignItems: 'center',
   },
 
   signUpTitle: {
-    marginBottom: 15,
-    fontSize: 20,
+    //marginBottom: 15,
+    marginTop: 20,
+    fontSize: 22,
     fontWeight: 'bold',
+    textAlign:'center',
   },
 
   signupForm: {
-    width: 300,
-    padding: 5,
-    marginBottom: 15,
+    //width: 300,
+    // padding: 5,
+    padding: 10,
+    //marginBottom: 15,
   },
 
   label: {
@@ -141,13 +144,20 @@ const styles = StyleSheet.create( {
   },
 
   input: {
-    backgroundColor: '#B3E0F2',
+    // backgroundColor: '#B3E0F2',
+    backgroundColor: 'rgba(235, 255, 255, 0.4)',
     borderRadius: 5,
     borderColor: 'gray',
     borderWidth: 0.5,
     marginBottom: 15,
     padding: 10,
     fontSize: 12,
+    shadowColor: 'rgba(200, 200, 200, 0.8)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
 
   form: {
@@ -157,18 +167,23 @@ const styles = StyleSheet.create( {
 
   buttonContainer: {
     // backgroundColor: 'gray',
-    width: 300,
-    padding: 5,
+    //width: 300,
+    // padding: 5,
+    padding: 10,
     marginBottom: 5,
   },
-
-
   
   button: {
     backgroundColor: 'dodgerblue',
     borderRadius: 300, 
     alignItems: 'center',
     padding: 10,
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
 
   buttonDisabled: {
@@ -176,11 +191,21 @@ const styles = StyleSheet.create( {
     borderRadius: 300,
     alignItems: 'center',
     padding: 10,
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
 
   buttonText: {
     fontWeight: 'bold',
     color: 'white',
+  },
+
+  contentView: {
+    alignItems: 'center',
   },
 
   LoginHereText: {

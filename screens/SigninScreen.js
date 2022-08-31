@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Linking, Platform } from 'react-native'
 
-import { HomeScreen } from './HomeScreen'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 export function SigninScreen(props) {
 
@@ -100,7 +100,7 @@ export function SigninScreen(props) {
         <TextInput style={styles.input}
           secureTextEntry={true}
           onChangeText={(value) => setPassword(value)}
-          placeholder="****"
+          placeholder="password"
           placeholderTextColor="darkgray"
         />
 
@@ -119,7 +119,7 @@ export function SigninScreen(props) {
           <Text style={styles.content}>Need an account?</Text>
           <Text style={styles.SignUpHereText}
             onPress={() => navigation.navigate('Signup')}>{' '}
-            Sign up
+            Sign up here...
           </Text>
         </Text>
       </View>
@@ -132,6 +132,7 @@ export function SigninScreen(props) {
         <TouchableOpacity style={styles.buttonGoogle}
           onPress={() => { Linking.openURL('https://accounts.google.com/signin/v2/identifier?hl=en-GB&continue=https%3A%2F%2Fwww.google.com%3Fhl%3Den-GB&ec=GAlA8wE&flowName=GlifWebSignIn&flowEntry=AddSession') }}
         >
+          <Icon style={ styles.addButtonIconDisabled} name="google" />
           <Text style={styles.buttonGoogleText}>Continue with Google</Text>
         </TouchableOpacity>
       </View>
@@ -144,21 +145,25 @@ const styles = StyleSheet.create({
 
   signInView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    //justifyContent: 'center',
+    //alignItems: 'center',
   },
 
   signInTitle: {
-    marginBottom: 15,
-    fontSize: 20,
+    // marginBottom: 15,
+    //marginBottom: 5,
+    marginTop: 20,
+    fontSize: 22,
     fontWeight: 'bold',
+    textAlign:'center',
 
   },
 
   signinForm: {
-    width: 300,
-    padding: 5,
-    marginBottom: 15,
+    //width: 300,
+    // padding: 5,
+    padding: 10,
+    //marginBottom: 15,
   },
 
   label: {
@@ -168,27 +173,21 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#B3E0F2',
+    // backgroundColor: '#B3E0F2',
+    backgroundColor: 'rgba(235, 255, 255, 0.4)',
     borderRadius: 5,
     borderColor: 'gray',
     borderWidth: 0.5,
     marginBottom: 15,
     padding: 10,
     fontSize: 12,
+    shadowColor: 'rgba(200, 200, 200, 0.8)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
-
-
-  // /////////////////
-  // inputFocus: {
-  //   backgroundColor: '#B3E0F2',
-  //   borderRadius: 5,
-  //   borderColor: 'blue',
-  //   borderWidth: 2,///////
-  //   marginBottom: 15,
-  //   padding: 10,
-  //   fontSize: 12,
-  // },
-
 
   form: {
     justifyContent: 'flex-start',
@@ -196,8 +195,9 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     // backgroundColor: 'gray',
-    width: 300,
-    padding: 5,
+    //width: 300,
+    //padding: 5,
+    padding: 10,
     marginBottom: 5,
   },
 
@@ -206,6 +206,12 @@ const styles = StyleSheet.create({
     borderRadius: 300,
     alignItems: 'center',
     padding: 10,
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
 
   buttonDisabled: {
@@ -213,6 +219,12 @@ const styles = StyleSheet.create({
     borderRadius: 300,
     alignItems: 'center',
     padding: 10,
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 5,
   },
 
   buttonText: {
@@ -236,20 +248,29 @@ const styles = StyleSheet.create({
   },
 
   buttonGoogle: {
-    borderRadius: 300,//
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 300,//
     padding: 10,
     borderColor: 'gray',
     borderWidth: 0.5,
+    
   },
 
   buttonGoogleText: {
     fontWeight: 'bold',
     color: 'darkgray',
+    paddingStart: 5,
   },
 
   buttonGoogleContainer: {
     flex: 1,
+
+  },
+
+  contentView: {
+    alignItems: 'center',
   },
 
 }) 

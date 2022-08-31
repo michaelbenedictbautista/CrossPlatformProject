@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 
   safeAreaViewContainer: {
     flex: 1,
-    // justifyContent: 'center',
+    justifyContent: 'center',
     // alignItems: 'center',
   },
 
@@ -107,15 +107,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: 'gray',
     borderWidth: 0.5,
-    marginBottom: 10,
+    //marginBottom: 10,
     padding: 10,
     fontSize: 12,
-    height: 80,
+    height: 90,
   },
 
   header: {
     // width: 300,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop:10,
     //marginBottom: 15,
   },
 
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 300,
     backgroundColor: '#313cdf',
-    width: 150,
+    //width: 150,
     borderWidth: 1,
     borderColor: "white"
   },
@@ -148,11 +149,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     //marginTop: 10,
+    marginTop: 5,
     marginBottom: 40,
     padding: 5,
     borderRadius: 300,
     backgroundColor: 'gray',
-    width: 150,
+    //width: 150,
     borderWidth: 1,
     borderColor: "black"
   },
@@ -182,8 +184,10 @@ const styles = StyleSheet.create({
   },
 
   btnContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    //justifyContent: 'center',
+    //alignItems: 'center',
+    padding: 10,
+    marginBottom: 5,
   }
 
 })
