@@ -10,6 +10,8 @@ import { SafeAreaView, ScrollView } from 'react-native'
 import { ListItem } from '../components/ListItem'
 import { ListItem2 } from '../components/ListItem2'
 import { ListSeparator } from '../components/ListSeparator'
+import { ListItem1 } from '../components/ListItem1'
+
 
 // External Lib
 import Storage from 'react-native-storage'
@@ -159,22 +161,30 @@ export function HomeScreen(props) {
 
   // Function declaration and definition to delete task from upListData and compListData
   const deleteItem = (itemId) => {
-
     // find the item id as key then remove the value using filter() method
     const newList = upListData.filter((item) => {
       if (item.id !== itemId) {
+        
         return item
       }
+      props.deleteDataToFirestore(`users/${props.auth.uid}/items/`, item)
     })
     setUpListData(newList)
 
+  }
+
+  const deleteItem2 = (itemId) => {
+    // find the item id as key then remove the value using filter() method
     const newListCompleted = compListData.filter((item) => {
       if (item.id !== itemId) {
+        
         return item
       }
+      props.deleteDataToFirestore(`users/${props.auth.uid}/items/`, item)
     })
     setCompListData(newListCompleted)
   }
+
 
   // Function declaration and definition to edit task from upListData
   const editItem = (itemId) => {
@@ -323,7 +333,7 @@ export function HomeScreen(props) {
   // Function to render upcominglist of items in the array
   const renderItem = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem item={item} remove={deleteItem}
+    <ListItem1 item={item} remove={deleteItem}
       update={updateStatus} generateQRCode={generateCode}
       edit={editItem}
     />
@@ -332,7 +342,7 @@ export function HomeScreen(props) {
   // Function to render completedlist of items in the array
   const renderItem2 = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem2 item={item} remove={deleteItem}
+    <ListItem2 item={item} remove={deleteItem2}
       update={updateStatus2} generateQRCode={generateCode2}
       edit={editItem}
     />
@@ -411,7 +421,7 @@ export function HomeScreen(props) {
       <ScrollView>
 
       <View style={styles.upcomingScreenContainer}>
-        <Text style={styles.upcomingScreen}> Upcoming task </Text>
+        <Text style={styles.upcomingScreen}>Upcoming task</Text>
       </View>
 
       <FlatList
@@ -423,7 +433,7 @@ export function HomeScreen(props) {
       < ListSeparator></ListSeparator>
 
       <View style={styles.completedScreenContainer}>
-        <Text style={styles.completedScreen}> Completed task </Text>
+        <Text style={styles.completedScreen}>Completed task</Text>
       </View>
 
       <FlatList

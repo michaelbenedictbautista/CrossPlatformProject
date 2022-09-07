@@ -23,6 +23,7 @@ import {
   collection,
   addDoc,
   updateDoc,
+  deleteDoc,
   query,
   onSnapshot,
   doc
@@ -131,6 +132,14 @@ export default function App() {
     const ref = await updateDoc(frankDocRef, data)
   }
 
+  // change status of data to firestore
+  const deleteDataToFirestore = async (FScollection, data) => {
+    // edit data to a collection with FS generated id
+    const frankDocRef = doc(db, FScollection, data.id);
+    const ref = await deleteDoc(frankDocRef, data)
+  }
+
+
   // check for changes which includes authentication of users and document availability
   const authObj = getAuth()
   onAuthStateChanged(authObj, (user) => {
@@ -179,7 +188,7 @@ export default function App() {
           headerRight: (props) => <SignoutButton {...props} signout={signout} />,
         }} >
 
-          {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} changeDataStatusToFirestore={changeDataStatusToFirestore} />}
+          {(props) => <HomeScreen {...props} auth={user} addDataToFirestore={addDataToFirestore} data={appData} getDataFromFirestore={getDataFromFirestore} changeDataStatusToFirestore={changeDataStatusToFirestore} deleteDataToFirestore={deleteDataToFirestore}/>}
         </Stack.Screen>
 
         <Stack.Screen name="Add" options={{ title: 'Create new task', headerTintColor: '#000', headerTitleAlign: 'center', }} >
