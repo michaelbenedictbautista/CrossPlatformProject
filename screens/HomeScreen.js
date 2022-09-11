@@ -7,11 +7,11 @@ import { LogBox } from 'react-native'
 import { SafeAreaView, ScrollView } from 'react-native'
 
 // Components
-import { ListItem } from '../components/ListItem'
-import { ListItem2 } from '../components/ListItem2'
+// import { ListItem1 } from '../components/ListItem1'
+// import { ListItem2 } from '../components/ListItem2'
+import { ListItemUp } from '../components/ListItemUp'
+import { ListItemComp } from '../components/ListItemComp'
 import { ListSeparator } from '../components/ListSeparator'
-import { ListItem1 } from '../components/ListItem1'
-
 
 // External Lib
 import Storage from 'react-native-storage'
@@ -221,6 +221,7 @@ export function HomeScreen(props) {
         }
       }
     })
+
   }
 
   // Function declaration and definition to mark Upcomingtask as done
@@ -333,7 +334,7 @@ export function HomeScreen(props) {
   // Function to render upcominglist of items in the array
   const renderItem = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem1 item={item} remove={deleteItem}
+    <ListItemUp item={item} remove={deleteItem}
       update={updateStatus} generateQRCode={generateCode}
       edit={editItem}
     />
@@ -342,7 +343,7 @@ export function HomeScreen(props) {
   // Function to render completedlist of items in the array
   const renderItem2 = ({ item }) => (
     // rendering our list of items(tasks)
-    <ListItem2 item={item} remove={deleteItem2}
+    <ListItemComp item={item} remove={deleteItem2}
       update={updateStatus2} generateQRCode={generateCode2}
       edit={editItem}
     />
@@ -441,6 +442,8 @@ export function HomeScreen(props) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem2}
         />
+
+      < ListSeparator></ListSeparator>
 
         <View style={styles.refreshContainer}>
           <TouchableOpacity style={styles.refreshButton}
@@ -585,15 +588,24 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    padding: 5,
+    padding: 15,
     backgroundColor: 'white',
+    borderRadius: 20,
+		shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
   },
 
   shareButtonStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
     padding: 10,
     borderRadius: 300,
@@ -601,12 +613,13 @@ const styles = StyleSheet.create({
   },
 
   shareButtonIcon: {
+    fontSize: 20,
     color: "white",
   },
 
   shareButtonTextStyle: {
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 15,
     color: 'white',
   },
 
@@ -614,12 +627,21 @@ const styles = StyleSheet.create({
     borderRadius: 300,
     alignItems: 'center',
     padding: 10,
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    //borderColor: 'gray',
+    // borderWidth: 0.5,
+    // marginVertical: 1,
+
+    backgroundColor: 'white',
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 10,
   },
 
   buttonCloseTextStyle: {
-    fontSize: 10,
+    fontSize: 15,
   },
 
   navBackground: {
@@ -674,7 +696,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
     padding: 5,
     borderRadius: 300,

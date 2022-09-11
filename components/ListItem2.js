@@ -34,7 +34,8 @@ export function ListItem2(props) {
 
 const styles = StyleSheet.create({
   item: {
-    padding: 8,
+    paddingVertical: 8,
+		paddingHorizontal: 20,
     flex: 1,
     justifyContent: 'center',
   },
