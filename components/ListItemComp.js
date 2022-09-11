@@ -98,22 +98,32 @@ export function ListItemComp(props) {
                 <View style={styles.modalViewContainer}>
                     <View style={styles.modalView}>
 
-                        <TouchableOpacity style={styles.removeTouchableOp} onPress={confirmDelete}>
+                        {/* <TouchableOpacity style={styles.removeTouchableOp} onPress={confirmDelete}>
                             <Icon name="delete" style={styles.trashIcon}><Text style={styles.deleteTaskText}>     Delete task</Text></Icon>
-                        </TouchableOpacity>
-
-                        <View style={{ backgroundColor: 'gray', height: .5, marginHorizontal: 20 }}></View>
-
-                        {/* <TouchableOpacity style={styles.markTouchableOp} onPress={() => props.update(props.item.id)}> */}
-                        <TouchableOpacity style={styles.markTouchableOp} onPress={confirmMoveToUpcomingTask}>
-                            <Icon name="check" style={styles.bookmarkIcon}><Text style={styles.moveTaskText}>     Move to 'Upcoming' task'</Text></Icon>
-                        </TouchableOpacity>
-
-                        <View style={{ backgroundColor: 'gray', height: .5, marginHorizontal: 20 }}></View>
-
-                        {/* <TouchableOpacity style={styles.closeTouchableOp} onPress={() => setModalVisible(!modalVisible)}>
-                            <Icon name="close" style={styles.closeIcon}><Text style={styles.closeText}>Close</Text></Icon>
                         </TouchableOpacity> */}
+
+                        <TouchableOpacity
+                            style={styles.removeTouchableOp}
+                            onPress={confirmDelete}>
+                            <Icon style={styles.trashIcon} name="delete" />
+                            <Text style={styles.deleteTaskText}>Delete task</Text>
+                        </TouchableOpacity>
+
+                        <View style={{ backgroundColor: 'gray', height: .5, marginHorizontal: 20 }}></View>
+
+                        {/* <TouchableOpacity style={styles.markTouchableOp} onPress={confirmMoveToUpcomingTask}>
+                            <Icon name="check" style={styles.bookmarkIcon}><Text style={styles.moveTaskText}>     Move to 'Upcoming' task'</Text></Icon>
+                        </TouchableOpacity> */}
+
+                        <TouchableOpacity
+                            style={styles.markTouchableOp}
+                            onPress={confirmMoveToUpcomingTask}>
+                            <Icon style={styles.bookmarkIcon} name="check" />
+                            <Text style={styles.moveTaskText}>Move to Upcoming task</Text>
+                        </TouchableOpacity>
+
+                        <View style={{ backgroundColor: 'gray', height: .5, marginHorizontal: 20 }}></View>
+
                         <TouchableOpacity style={styles.closeTouchableOp} onPress={() => setModalVisible(!modalVisible)}>
                             <Text style={styles.closeText}>close</Text>
                         </TouchableOpacity>
@@ -171,6 +181,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 15,
         alignContent: 'flex-start',
+
+
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     markTouchableOp: {
@@ -180,13 +194,17 @@ const styles = StyleSheet.create({
         padding: 15,
         //alignSelf: 'center',
         alignContent: 'flex-start',
+
+
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
     // closeTouchableOp: {
-    //     right: 1,
-    //     justifyContent: 'center',
-    //     padding: 15,
-    //     alignSelf: 'center',
+    // 	right: 1,
+    // 	justifyContent: 'center',
+    // 	padding: 15,
+    // 	alignSelf: 'center',
     // },
 
     closeTouchableOp: {
@@ -207,6 +225,9 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0,
         shadowRadius: 5,
+
+
+        alignSelf: 'center',
     },
 
     generateIcon: {
@@ -225,7 +246,7 @@ const styles = StyleSheet.create({
 
     bookmarkIcon: {
         fontSize: 20,
-        marginEnd: 20,
+        // marginEnd: 20,
     },
 
     closeIcon: {
@@ -233,22 +254,39 @@ const styles = StyleSheet.create({
         marginEnd: 20,
     },
 
+    // deleteTaskText: {
+    // 	fontSize: 15,
+    // 	fontWeight: 'bold',
+    // 	// marginHorizontal: 10,
+    // },
+
+
     deleteTaskText: {
-        fontSize: 15,
         fontWeight: 'bold',
-        // marginHorizontal: 10,
+        fontSize: 15,
+        color: 'black',
+        marginStart: 20,
     },
 
+    // moveTaskText: {
+    // 	fontSize: 15,
+    // 	fontWeight: 'bold',
+    // 	// margin: 5,
+    // },
+
+
     moveTaskText: {
-        fontSize: 15,
         fontWeight: 'bold',
-        // margin: 5,
+        fontSize: 15,
+        color: 'black',
+        marginStart: 20,
     },
 
     closeText: {
         fontSize: 15,
         //fontWeight: 'bold',
         //margin: 5,
+
     },
 
     modalViewContainer: {
@@ -257,6 +295,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 10,
         margin: 10,
+
+
+
+
     },
 
     modalView: {
@@ -273,6 +315,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 5,
+
+        alignItems: 'flex-start',
     },
 
     // 	modalView: {

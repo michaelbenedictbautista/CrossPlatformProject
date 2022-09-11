@@ -401,9 +401,9 @@ export function HomeScreen(props) {
             <TouchableOpacity
               style={styles.shareButtonStyle}
               onPress={shareQRCode}>
-              <Icon style={styles.shareButtonIcon} name="save" />
+              <Icon style={styles.shareButtonIcon} name="save"/>
               <Text style={styles.shareButtonTextStyle}>
-                Save QR code
+                Share
               </Text>
             </TouchableOpacity>
 
@@ -599,6 +599,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
+    
+    
+    // alignContent: 'center',
   },
 
   shareButtonStyle: {
@@ -610,6 +613,18 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 300,
     backgroundColor: '#313cdf',
+ 
+    borderWidth: 1,
+    borderColor: '#313cdf',
+
+    shadowColor: 'rgba(200, 200, 200, 1)',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 1,
+
+
   },
 
   shareButtonIcon: {
@@ -621,6 +636,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     color: 'white',
+    marginStart: 2,
   },
 
   buttonClose: {
@@ -628,16 +644,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     //borderColor: 'gray',
-    // borderWidth: 0.5,
+    borderWidth: 0.5,
     // marginVertical: 1,
 
     backgroundColor: 'white',
     shadowColor: 'rgba(200, 200, 200, 1)',
     shadowOffset: {
-      width: 2,
+      width: 0,
       height: 2,
     },
-    shadowOpacity: 10,
+    shadowOpacity: 1,
   },
 
   buttonCloseTextStyle: {
